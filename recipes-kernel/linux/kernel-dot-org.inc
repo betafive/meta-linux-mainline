@@ -1,7 +1,7 @@
 DESCRIPTION = "Linux kernel"
 SECTION = "kernel"
 LICENSE = "GPLv2"
-LIC_FILES_CHKSUM = "file://COPYING;md5=bbea815ee2795b2f4230826c0c6b8814"
+LIC_FILES_CHKSUM = "file://COPYING;md5=6bc538ed5bd9a7fc9398086aedcd7e46"
 
 inherit kernel
 
@@ -23,4 +23,12 @@ python __anonymous() {
     if d.getVar("PREFERRED_PROVIDER_virtual/kernel") != "linux-stable":
         msg = "Skipping linux recipe (from meta-kernel) as it is not the preferred provider of virtual/kernel."
         raise bb.parse.SkipRecipe(msg)
+
+    # Handle checksums of older COPYING files
+    vmajor = int(d.getVar("LINUX_VMAJOR"))
+    vminor = int(d.getVar("LINUX_VMINOR"))
+    if (vmajor, vminor) <= (4, 17):
+        d.setVar("LIC_FILES_CHKSUM", "file://COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7")
+    elif (vmajor, vminor) <= (5, 5):
+        d.setVar("LIC_FILES_CHKSUM", "file://COPYING;md5=bbea815ee2795b2f4230826c0c6b8814")
 }
