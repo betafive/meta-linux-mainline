@@ -36,7 +36,7 @@ gen_kas() {
 header:
   version: 8
   includes:
-    - kas/test-base.yml
+    - test-base.yml
 
 local_conf_header:
   linux_version: |
