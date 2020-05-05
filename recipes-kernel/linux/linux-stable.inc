@@ -12,7 +12,7 @@ LINUX_VERSION = "${LINUX_VMAJOR}.${LINUX_VMINOR}.${LINUX_VPATCH}"
 LINUX_BRANCH = "linux-${LINUX_VMAJOR}.${LINUX_VMINOR}.y"
 PV = "${LINUX_VERSION}"
 
-LINUX_GIT_URI = "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git;branch=${LINUX_BRANCH}"
+LINUX_GIT_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git;branch=${LINUX_BRANCH};protocol=https"
 LINUX_TARBALL_URI = "https://cdn.kernel.org/pub/linux/kernel/v${LINUX_VMAJOR}.x/linux-${LINUX_VERSION}.tar.xz"
 
 # The download method may either be 'git' or 'tarball'.
