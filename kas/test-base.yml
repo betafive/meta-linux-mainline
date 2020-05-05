@@ -39,4 +39,4 @@ local_conf_header:
         ABORT,/tmp,10M,1K"
     CONF_VERSION = "1"
     PREFERRED_PROVIDER_virtual/kernel_forcevariable = "linux-stable"
-    KERNEL_DOT_ORG_DOWNLOAD = "tarball"
+    LINUX_STABLE_DOWNLOAD = "tarball"

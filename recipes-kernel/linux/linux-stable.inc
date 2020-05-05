@@ -16,8 +16,8 @@ LINUX_GIT_URI = "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.gi
 LINUX_TARBALL_URI = "https://cdn.kernel.org/pub/linux/kernel/v${LINUX_VMAJOR}.x/linux-${LINUX_VERSION}.tar.xz"
 
 # The download method may either be 'git' or 'tarball'.
-KERNEL_DOT_ORG_DOWNLOAD ??= "git"
-require kernel-dot-org-${KERNEL_DOT_ORG_DOWNLOAD}.inc
+LINUX_STABLE_DOWNLOAD ??= "git"
+require linux-stable-${LINUX_STABLE_DOWNLOAD}.inc
 
 python __anonymous() {
     if d.getVar("PREFERRED_PROVIDER_virtual/kernel") != "linux-stable":

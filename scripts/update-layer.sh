@@ -25,7 +25,7 @@ LINUX_VPATCH = "${VPATCH}"
 LINUX_SRCREV = "${SRCREV}"
 LINUX_SHA256 = "${SHA256}"
 
-require kernel-dot-org.inc
+require linux-stable.inc
 EOF
 }
 
