@@ -5,4 +5,4 @@ header:
 
 local_conf_header:
   linux_version: |
-    PREFERRED_VERSION_linux = "5.4.38"
+    PREFERRED_VERSION_linux-stable = "5.4.38"

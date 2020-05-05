@@ -38,5 +38,5 @@ local_conf_header:
         ABORT,${SSTATE_DIR},100M,1K \
         ABORT,/tmp,10M,1K"
     CONF_VERSION = "1"
-    PREFERRED_PROVIDER_virtual/kernel_forcevariable = "linux"
+    PREFERRED_PROVIDER_virtual/kernel_forcevariable = "linux-stable"
     KERNEL_DOT_ORG_DOWNLOAD = "tarball"

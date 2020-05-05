@@ -20,7 +20,7 @@ KERNEL_DOT_ORG_DOWNLOAD ??= "git"
 require kernel-dot-org-${KERNEL_DOT_ORG_DOWNLOAD}.inc
 
 python __anonymous() {
-    if d.getVar("PREFERRED_PROVIDER_virtual/kernel") != "linux":
+    if d.getVar("PREFERRED_PROVIDER_virtual/kernel") != "linux-stable":
         msg = "Skipping linux recipe (from meta-kernel) as it is not the preferred provider of virtual/kernel."
         raise bb.parse.SkipRecipe(msg)
 }
