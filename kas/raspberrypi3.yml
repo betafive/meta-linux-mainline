@@ -1,0 +1,21 @@
+header:
+  version: 8
+  includes:
+    - inc/base.yml
+
+machine: raspberrypi3
+
+repos:
+  meta-raspberrypi:
+    url: https://github.com/agherzan/meta-raspberrypi.git
+    refspec: dunfell
+
+local_conf_header:
+  test_rpi: |
+    PREFERRED_PROVIDER_virtual/kernel_forcevariable = "linux-stable"
+    RPI_KERNEL_DEVICETREE = " \
+      bcm2837-rpi-3-b.dtb \
+      bcm2837-rpi-3-b-plus.dtb \
+      "
+    RPI_KERNEL_DEVICETREE_OVERLAYS = ""
+    KERNEL_CONFIG_COMMAND = "oe_runmake -C ${S} CC="${KERNEL_CC}" LD="${KERNEL_LD}" O=${B} multi_v7_defconfig"

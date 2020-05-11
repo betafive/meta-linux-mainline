@@ -18,3 +18,13 @@ qemux86-64_lts:
   stage: build
   script:
     - kas build kas/$CI_JOB_NAME.yml
+
+raspberrypi3:
+  stage: build
+  script:
+    - kas build kas/$CI_JOB_NAME.yml
+
+raspberrypi3_lts:
+  stage: build
+  script:
+    - kas build kas/$CI_JOB_NAME.yml
