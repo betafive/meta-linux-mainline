@@ -29,26 +29,10 @@ require linux-stable.inc
 EOF
 }
 
-gen_kas() {
-    VERSION=$1
-
-    cat << EOF
-header:
-  version: 8
-  includes:
-    - test-base.yml
-
-local_conf_header:
-  linux_version: |
-    PREFERRED_VERSION_linux-stable = "${VERSION}"
-EOF
-}
-
 echo "Updating recipes..."
 for S in ${SERIES}; do
     VERSION=`find_latest ${S}`
     gen_recipe ${VERSION} > recipes-kernel/linux/linux-stable_${S}.bb
-    gen_kas ${VERSION} > kas/test-${S}.yml
     echo "    recipes-kernel/linux/linux-stable_${S}.bb: v${VERSION}"
 done
 echo "Done."
