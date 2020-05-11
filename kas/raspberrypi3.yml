@@ -8,6 +8,7 @@ machine: raspberrypi3
 repos:
   meta-raspberrypi:
     url: https://github.com/agherzan/meta-raspberrypi.git
+    path: layers/meta-raspberrypi
     refspec: dunfell
 
 local_conf_header:

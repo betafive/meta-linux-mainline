@@ -26,6 +26,9 @@ stages:
     expire_in: 30 days
     paths:
       - images
+  cache:
+    paths:
+      - layers
 
 qemux86-64:
   extends: .build
