@@ -21,11 +21,11 @@ stages:
         rclone copy --ignore-existing build/sstate-cache/ b2:meta-kernel/sstate/
       fi
   artifacts:
-    name: Images
-    expose_as: Images
+    name: images
+    expose_as: images
     expire_in: 30 days
     paths:
-      - images.tar.gz
+      - images
 
 qemux86-64:
   extends: .build
