@@ -1,30 +1,34 @@
 stages:
   - build
 
-default:
+.build:
+  stage: build
   image: crops/poky
   before_script:
     - export PATH=~/.local/bin:$PATH
     - wget https://bootstrap.pypa.io/get-pip.py
     - python3 get-pip.py
     - python3 -m pip install kas
+    - wget -q 'https://downloads.rclone.org/rclone-current-linux-amd64.zip'
+    - unzip -q rclone-current-linux-amd64.zip
+    - mv rclone-*-linux-amd64/rclone ~/.local/bin/
+    - rm -rf rclone-*-linux-amd64*
+  script:
+    - ./scripts/test-build.sh $CI_JOB_NAME
+    - |
+      if [[ "$CI_COMMIT_REF_NAME" == "master" ]]; then
+        rclone config create b2 b2 account $B2_KEY_ID key $B2_APP_KEY > /dev/null
+        rclone copy --ignore-existing build/sstate-cache/ b2:meta-kernel/sstate/
+      fi
 
 qemux86-64:
-  stage: build
-  script:
-    - kas build kas/$CI_JOB_NAME.yml
+  extends: .build
 
 qemux86-64_lts:
-  stage: build
-  script:
-    - kas build kas/$CI_JOB_NAME.yml
+  extends: .build
 
 raspberrypi3:
-  stage: build
-  script:
-    - kas build kas/$CI_JOB_NAME.yml
+  extends: .build
 
 raspberrypi3_lts:
-  stage: build
-  script:
-    - kas build kas/$CI_JOB_NAME.yml
+  extends: .build
