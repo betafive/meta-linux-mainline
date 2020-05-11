@@ -1,0 +1,7 @@
+LINUX_VMAJOR = "4"
+LINUX_VMINOR = "4"
+LINUX_VPATCH = "223"
+LINUX_SRCREV = "e157447efd85bb2e6f8deaabbb62663bccd9bad2"
+LINUX_SHA256 = "cd963e66d7fb07f142fa5274ec90f46c8388a327e2ba28c5fec245d734b0d425"
+
+require linux-stable.inc
