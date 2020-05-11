@@ -20,6 +20,12 @@ stages:
         rclone config create b2 b2 account $B2_KEY_ID key $B2_APP_KEY > /dev/null
         rclone copy --ignore-existing build/sstate-cache/ b2:meta-kernel/sstate/
       fi
+  artifacts:
+    name: Images
+    expose_as: Images
+    expire_in: 30 days
+    paths:
+      - images.tar.gz
 
 qemux86-64:
   extends: .build

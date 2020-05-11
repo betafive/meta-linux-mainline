@@ -6,3 +6,5 @@ S=$1
 
 ( kas shell kas/${S}.yml -c 'bitbake --setscene-only core-image-base' || true ) | sed -e '/^NOTE: .*Started$/d' -e '/^NOTE: Running /d'
 kas shell kas/${S}.yml -c 'bitbake --skip-setscene core-image-base' | sed -e '/^NOTE: .*Started$/d' -e '/^NOTE: Running /d'
+
+tar czf images.tar.gz -C build/tmp/deploy images
