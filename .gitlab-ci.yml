@@ -20,6 +20,8 @@ stages:
         rclone config create b2 b2 account $B2_KEY_ID key $B2_APP_KEY > /dev/null
         rclone copy --ignore-existing build/sstate-cache/ b2:meta-kernel/sstate/
       fi
+  after_script:
+    - rm -rf build
   artifacts:
     name: images
     expose_as: images
