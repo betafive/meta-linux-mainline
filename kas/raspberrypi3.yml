@@ -14,9 +14,10 @@ repos:
 local_conf_header:
   test_rpi: |
     PREFERRED_PROVIDER_virtual/kernel_forcevariable = "linux-stable"
-    RPI_KERNEL_DEVICETREE = " \
-      bcm2837-rpi-3-b.dtb \
-      bcm2837-rpi-3-b-plus.dtb \
-      "
+    RPI_KERNEL_DEVICETREE = "bcm2837-rpi-3-b-plus.dtb"
     RPI_KERNEL_DEVICETREE_OVERLAYS = ""
     KERNEL_CONFIG_COMMAND = "oe_runmake -C ${S} CC="${KERNEL_CC}" LD="${KERNEL_LD}" O=${B} multi_v7_defconfig"
+    MACHINE_FEATURES_remove = "vc4graphics"
+    RPI_EXTRA_CONFIG += " \
+      upstream_kernel=1 \n \
+      avoid_warnings=2 \n"
