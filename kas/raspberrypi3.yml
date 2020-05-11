@@ -21,3 +21,4 @@ local_conf_header:
     RPI_EXTRA_CONFIG += " \
       upstream_kernel=1 \n \
       avoid_warnings=2 \n"
+    do_image_wic[depends] += "rpi-cmdline:do_deploy"
