@@ -28,6 +28,13 @@ It is expected that some BSP layers will directly use this layer to provide a
 vanilla kernel recipe where a vendor kernel is not needed. In these cases no
 changes will be needed to make use of the kernel recipes in this layer.
 
+For other BSP layers you may be given a choice between a vendor kernel and a
+vanilla kernel. The method of choosing the desired kernel provider will be
+BSP-specific. An example of this can be seen in the
+[meta-sancloud](https://github.com/sancloudltd/meta-sancloud/) BSP where the
+kernel recipes from this layer are used if `BBE_KERNEL_PROVIDER` is set to
+`stable`, `lts` or `mainline`.
+
 ### Replacing your vendor kernel
 
 Many Board Support Package (BSP) layers default to using a vendor-specific
@@ -46,17 +53,39 @@ kernel recipe from this layer you should override the
 possible to set `PREFERRED_VERSION_linux-stable` to choose a stable kernel
 release series.
 
+The kas build configuration in this repository demonstrate how this can be
+achieved for both qemux86-64 (from the openembeded-core layer) and
+raspberrypi3 (from the
+[meta-raspberrypi](https://github.com/agherzan/meta-raspberrypi) BSP layer.
+These configurations are used with the [kas](https://github.com/siemens/kas)
+tool.
+
 This layer is tested with the most recent Yocto Project release branch
 (currently "dunfell") but should also work with the master branch without
 changes.
 
+### Additional configuration options
+
+The `linux-stable` recipes allow the source download method to be chosen
+using the `LINUX_STABLE_DOWNLOAD` variable. The supported values are:
+
+* `git` (default): The `linux-stable` git repository is pulled from
+  git.kernel.org. This method requires more bandwidth for the initial download
+  but subsequent updates will be faster.
+
+* `tarball`: The release tarball for the selected kernel recipe is downloaded.
+  This method requires less bandwidth for the initial download but after
+  several updates may result in higher overall bandwidth use. This method is
+  best suited to throw-away build environments or one-off builds where future
+  updates are not expected to use the same downloads directory.
+
 ## Contributing to this layer
 
-To report bugs or request new recipes & features please use our [issue
-tracker](https://gitlab.com/openembedded/community/meta-kernel/-/issues).
+To report bugs or request new recipes & features please use our
+[issue tracker](https://gitlab.com/openembedded/community/meta-kernel/-/issues).
 
-To submit changes to this layer please fork the repository on GitLab and
-open a [merge request](https://gitlab.com/openembedded/community/meta-kernel/-/merge_requests).
+To submit changes to this layer please fork the repository on GitLab and open
+a [merge request](https://gitlab.com/openembedded/community/meta-kernel/-/merge_requests).
 
 ## Maintainers
 
