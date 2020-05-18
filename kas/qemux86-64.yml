@@ -6,6 +6,6 @@ header:
 machine: qemux86-64
 
 local_conf_header:
-  test_qemu: |
-    PREFERRED_PROVIDER_virtual/kernel_forcevariable = "linux-stable"
-    KERNEL_CONFIG_COMMAND = "oe_runmake -C ${S} CC="${KERNEL_CC}" LD="${KERNEL_LD}" O=${B} x86_64_defconfig"
+  testconfig: |
+    require conf/meta-kernel/stable.inc
+    require conf/meta-kernel/bsp/qemux86-64.inc

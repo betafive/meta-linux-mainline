@@ -1,5 +1,12 @@
 header:
   version: 8
   includes:
-    - raspberrypi3.yml
-    - inc/lts.yml
+    - inc/base.yml
+    - inc/raspberrypi.yml
+
+machine: raspberrypi3
+
+local_conf_header:
+  testconfig: |
+    require conf/meta-kernel/lts.inc
+    require conf/meta-kernel/bsp/raspberrypi3.inc
