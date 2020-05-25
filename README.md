@@ -3,6 +3,8 @@ meta-kernel
 
 A collection of Yocto Project recipes for the Linux kernel and related tools.
 
+[[_TOC_]]
+
 ## Contents of this layer
 
 This layer currently contains the following kernel recipes:
