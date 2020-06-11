@@ -2,7 +2,7 @@
 
 set -e
 
-SERIES="4.4 4.9 4.14 4.19 5.4 5.6"
+SERIES="4.4 4.9 4.14 4.19 5.4 5.6 5.7"
 
 find_latest() {
     VERSION=$1
