@@ -32,3 +32,9 @@ python __anonymous() {
     elif (vmajor, vminor) <= (5, 5):
         d.setVar("LIC_FILES_CHKSUM", "file://COPYING;md5=bbea815ee2795b2f4230826c0c6b8814")
 }
+
+do_configure_prepend() {
+	if [ -n "${KBUILD_DEFCONFIG}" ] && [ -f "${S}/arch/${ARCH}/configs/${KBUILD_DEFCONFIG}" ]; then
+		oe_runmake_call -C ${S} CC="${KERNEL_CC}" LD="${KERNEL_LD}" O=${B} ${KBUILD_DEFCONFIG}
+	fi
+}
