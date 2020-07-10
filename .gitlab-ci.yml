@@ -31,6 +31,8 @@ stages:
   cache:
     paths:
       - layers
+  only:
+    - branches@openembedded/community/meta-kernel
 
 qemux86-64:
   extends: .build
