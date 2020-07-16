@@ -1,0 +1,42 @@
+#! /bin/bash
+# Copyright (C) 2020, meta-kernel contributors
+# SPDX-License-Identifier: MIT
+
+set -euo pipefail
+
+usage() {
+    echo "This script generates a bitbake recipe for a given upstream kernel"
+    echo "version."
+    echo ""
+    echo "Usage: $0 VERSION"
+    echo "    where VERSION is the full Linux kernel version, e.g. '4.19.10'"
+    echo "    or '5.4.1'"
+}
+
+if [ "$1" == "--help" ]; then
+    usage
+    exit 0
+fi
+
+if [ $# != 1 ]; then
+    echo "ERROR: Incorrect number of arguments provided!" > /dev/stderr
+    usage > /dev/stderr
+    exit 1
+fi
+
+VERSION=$1
+VMAJOR=`echo ${VERSION} | cut -d. -f1`
+VMINOR=`echo ${VERSION} | cut -d. -f2`
+VPATCH=`echo ${VERSION} | cut -d. -f3`
+SRCREV=`git ls-remote https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git "v${VERSION}^{}" | cut -f1`
+SHA256=`curl -s https://cdn.kernel.org/pub/linux/kernel/v${VMAJOR}.x/sha256sums.asc | grep linux-${VERSION}.tar.xz | cut -d' ' -f1`
+
+cat << EOF
+LINUX_VMAJOR = "${VMAJOR}"
+LINUX_VMINOR = "${VMINOR}"
+LINUX_VPATCH = "${VPATCH}"
+LINUX_SRCREV = "${SRCREV}"
+LINUX_SHA256 = "${SHA256}"
+
+require linux-stable.inc
+EOF
