@@ -28,9 +28,6 @@ stages:
     expire_in: 30 days
     paths:
       - images
-  cache:
-    paths:
-      - layers
   only:
     - branches@openembedded/community/meta-kernel
 
