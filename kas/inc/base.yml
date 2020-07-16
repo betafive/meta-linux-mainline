@@ -11,7 +11,7 @@ repos:
   poky:
     url: https://git.yoctoproject.org/git/poky
     path: layers/poky
-    refspec: dunfell
+    refspec: master
     layers:
       meta:
       meta-poky:
