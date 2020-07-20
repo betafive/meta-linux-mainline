@@ -20,10 +20,6 @@ LINUX_STABLE_DOWNLOAD ??= "git"
 require linux-stable-${LINUX_STABLE_DOWNLOAD}.inc
 
 python __anonymous() {
-    if d.getVar("PREFERRED_PROVIDER_virtual/kernel") != "linux-stable":
-        msg = "Skipping linux recipe (from meta-kernel) as it is not the preferred provider of virtual/kernel."
-        raise bb.parse.SkipRecipe(msg)
-
     # Handle checksums of older COPYING files
     vmajor = int(d.getVar("LINUX_VMAJOR"))
     vminor = int(d.getVar("LINUX_VMINOR"))
