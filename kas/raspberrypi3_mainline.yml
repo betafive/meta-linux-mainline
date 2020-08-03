@@ -1,0 +1,12 @@
+header:
+  version: 8
+  includes:
+    - inc/base.yml
+    - inc/raspberrypi.yml
+
+machine: raspberrypi3
+
+local_conf_header:
+  testconfig: |
+    require conf/meta-kernel/mainline.inc
+    require conf/meta-kernel/bsp/raspberrypi3.inc

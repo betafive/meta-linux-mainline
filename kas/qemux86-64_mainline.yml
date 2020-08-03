@@ -1,0 +1,11 @@
+header:
+  version: 8
+  includes:
+    - inc/base.yml
+
+machine: qemux86-64
+
+local_conf_header:
+  testconfig: |
+    require conf/meta-kernel/mainline.inc
+    require conf/meta-kernel/bsp/qemux86-64.inc

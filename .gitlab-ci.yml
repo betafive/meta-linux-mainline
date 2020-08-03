@@ -31,14 +31,20 @@ stages:
   only:
     - branches@openembedded/community/meta-kernel
 
-qemux86-64:
+qemux86-64_stable:
   extends: .build
 
 qemux86-64_lts:
   extends: .build
 
-raspberrypi3:
+qemux86-64_mainline:
+  extends: .build
+
+raspberrypi3_stable:
   extends: .build
 
 raspberrypi3_lts:
+  extends: .build
+
+raspberrypi3_mainline:
   extends: .build
