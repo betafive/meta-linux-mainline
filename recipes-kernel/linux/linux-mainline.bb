@@ -8,9 +8,9 @@ inherit kernel
 # The ORC unwinder is enabled in x86_64_defconfig and needs libelf-dev
 DEPENDS_append_x86-64 = " elfutils-native"
 
-LINUX_VERSION = "5.8"
+LINUX_VERSION = "5.9-rc5"
 PV = "${LINUX_VERSION}"
 
 SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git;protocol=https"
-SRCREV = "bcf876870b95592b52519ed4aafcf9d95999bc9c"
+SRCREV = "856deb866d16e29bd65952e0289066f6078af773"
 S = "${WORKDIR}/git"
