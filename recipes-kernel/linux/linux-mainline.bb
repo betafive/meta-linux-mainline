@@ -1,5 +1,5 @@
 require linux-mainline-common.inc
-DESCRIPTION += "(mainline)"
+SUMMARY += "(mainline)"
 
 LINUX_VERSION = "5.10-rc2"
 PV = "${LINUX_VERSION}"

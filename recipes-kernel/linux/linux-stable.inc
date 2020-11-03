@@ -1,5 +1,5 @@
 require linux-mainline-common.inc
-DESCRIPTION += "(stable)"
+SUMMARY += "(stable)"
 
 LINUX_VERSION = "${LINUX_VMAJOR}.${LINUX_VMINOR}.${LINUX_VPATCH}"
 LINUX_BRANCH = "linux-${LINUX_VMAJOR}.${LINUX_VMINOR}.y"
