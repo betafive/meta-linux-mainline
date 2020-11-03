@@ -1,0 +1,6 @@
+header:
+  version: 8
+
+repos:
+  poky:
+    refspec: master-next
