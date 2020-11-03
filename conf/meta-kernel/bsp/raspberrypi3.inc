@@ -7,7 +7,8 @@ RPI_EXTRA_CONFIG += " \
     upstream_kernel=1 \n \
     avoid_warnings=2 \n"
 
-KERNEL_CONFIG_COMMAND_rpi = "oe_runmake -C ${S} CC="${KERNEL_CC}" LD="${KERNEL_LD}" O=${B} multi_v7_defconfig"
+KBUILD_DEFCONFIG = "multi_v7_defconfig"
+KCONFIG_MODE = "alldefconfig"
 MACHINE_FEATURES_remove_rpi = "vc4graphics"
 
 RPI_EXTRA_WIC_DEPENDS_rpi = "rpi-cmdline:do_deploy"
