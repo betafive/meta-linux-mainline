@@ -1,7 +1,0 @@
-LINUX_VMAJOR = "5"
-LINUX_VMINOR = "7"
-LINUX_VPATCH = "19"
-LINUX_SRCREV = "6b9830fecd4a87d7ebb4d93484fef00f46d0fa0f"
-LINUX_SHA256 = "419c6248b9ae4dfead4599787aecbfd202e88bc4124523adfa6dd2d642b99fe7"
-
-require linux-stable.inc
