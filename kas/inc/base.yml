@@ -1,17 +1,20 @@
 header:
-  version: 8
+  version: 9
 
 machine: qemux86
 distro: poky
 target:
   - core-image-base
 
+defaults:
+  repos:
+    refspec: master
+
 repos:
   meta-kernel:
   poky:
     url: https://git.yoctoproject.org/git/poky
     path: layers/poky
-    refspec: master
     layers:
       meta:
       meta-poky:
