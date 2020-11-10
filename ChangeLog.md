@@ -1,5 +1,5 @@
-ChangeLog for meta-kernel
-=========================
+ChangeLog for meta-linux-mainline
+=================================
 
 dunfell-r1 (2020-05-26)
 -----------------------

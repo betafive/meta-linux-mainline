@@ -1,5 +1,5 @@
 #! /bin/bash
-# Copyright (C) 2020, meta-kernel contributors
+# Copyright (C) 2020, meta-linux-mainline contributors
 # SPDX-License-Identifier: MIT
 
 set -euo pipefail

@@ -20,6 +20,6 @@ python __anonymous() {
         vmajor = int(d.getVar("LINUX_VMAJOR"))
         vminor = int(d.getVar("LINUX_VMINOR"))
         if (vmajor, vminor) < (4, 19):
-            msg = "Skipping linux-stable recipe (from meta-kernel) as it is too old to support raspberrypi3"
+            msg = "Skipping linux-stable recipe (from meta-linux-mainline) as it is too old to support raspberrypi3"
             raise bb.parse.SkipRecipe(msg)
 }

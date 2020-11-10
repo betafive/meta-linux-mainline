@@ -7,5 +7,5 @@ machine: qemux86-64
 
 local_conf_header:
   testconfig: |
-    require conf/meta-kernel/lts.inc
-    require conf/meta-kernel/bsp/qemux86-64.inc
+    require conf/linux-mainline/lts.inc
+    require conf/linux-mainline/bsp/qemux86-64.inc

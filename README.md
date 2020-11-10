@@ -1,7 +1,8 @@
-meta-kernel
-===========
+meta-linux-mainline
+===================
 
-A collection of Yocto Project recipes for the Linux kernel and related tools.
+A collection of Yocto Project recipes for the mainline and stable Linux
+kernel releases from kernel.org.
 
 [[_TOC_]]
 
@@ -18,13 +19,6 @@ This layer currently contains the following kernel recipes:
   master branch of the mainline Linux repository. As this branch includes
   release candidate (rc) kernels it is only recommended for testing and active
   development.
-
-It is expected that additional kernel recipes and other kernel related tools
-will be added in the future.
-
-This layer is tested with the most recent Yocto Project release branch
-(currently "dunfell") but should also work with the master branch without
-changes.
 
 ## Using this layer
 
@@ -65,13 +59,13 @@ To simplify the process of selecting a kernel recipe from this layer, 3
 `.inc` files are provided which can be included from your `local.conf` file
 or from a distro conf file:
 
-* `conf/meta-kernel/stable.inc`: Selects the `linux-stable` recipe for the
+* `conf/linux-mainline/stable.inc`: Selects the `linux-stable` recipe for the
   latest stable kernel version (typically not an LTS kernel).
 
-* `conf/meta-kernel/lts.inc`: Selects the `linux-stable` recipe for the latest
-  LTS kernel version.
+* `conf/linux-mainline/lts.inc`: Selects the `linux-stable` recipe for the
+  latest LTS kernel version.
 
-* `conf/meta-kernel/mainline.inc`: Selects the `linux-mainline` recipe.
+* `conf/linux-mainline/mainline.inc`: Selects the `linux-mainline` recipe.
 
 #### Board support
 
@@ -85,7 +79,7 @@ vanilla kernel if it is not supported already by the relevant BSP layer. To
 use the appropriate `.inc` file, add the following line to your `local.conf`
 or distro conf file:
 
-    include conf/meta-kernel/bsp/${MACHINE}
+    include conf/linux-mainline/bsp/${MACHINE}
 
 #### Using kas
 
@@ -113,11 +107,14 @@ using the `LINUX_STABLE_DOWNLOAD` variable. The supported values are:
 
 ## Contributing to this layer
 
-To report bugs or request new recipes & features please use our
-[issue tracker](https://gitlab.com/openembedded/community/meta-kernel/-/issues).
+To report bugs or request new recipes & features please use our [issue
+tracker][1].
 
 To submit changes to this layer please fork the repository on GitLab and open
-a [merge request](https://gitlab.com/openembedded/community/meta-kernel/-/merge_requests).
+a [merge request][2].
+
+[1]: https://gitlab.com/openembedded/community/meta-linux-mainline/-/issues
+[2]: https://gitlab.com/openembedded/community/meta-linux-mainline/-/merge_requests
 
 ## Maintainers
 

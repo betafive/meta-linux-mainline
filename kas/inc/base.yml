@@ -11,7 +11,7 @@ defaults:
     refspec: master
 
 repos:
-  meta-kernel:
+  meta-linux-mainline:
   poky:
     url: https://git.yoctoproject.org/git/poky
     path: layers/poky
