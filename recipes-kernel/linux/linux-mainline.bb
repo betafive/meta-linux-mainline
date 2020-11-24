@@ -1,9 +1,9 @@
 require linux-mainline-common.inc
 SUMMARY += "(mainline)"
 
-LINUX_VERSION = "5.10-rc3"
+LINUX_VERSION = "5.10-rc5"
 PV = "${LINUX_VERSION}"
 
 SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git;protocol=https"
-SRCREV = "f8394f232b1eab649ce2df5c5f15b0e528c92091"
+SRCREV = "418baf2c28f3473039f2f7377760bd8f6897ae18"
 S = "${WORKDIR}/git"
