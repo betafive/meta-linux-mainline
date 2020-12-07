@@ -10,6 +10,7 @@ RPI_EXTRA_CONFIG += " \
 KBUILD_DEFCONFIG = "multi_v7_defconfig"
 KCONFIG_MODE = "alldefconfig"
 MACHINE_FEATURES_remove_rpi = "vc4graphics"
+DISTRO_FEATURES_remove_rpi = "opengl x11 wayland vulkan"
 
 RPI_EXTRA_WIC_DEPENDS_rpi = "rpi-cmdline:do_deploy"
 do_image_wic[depends] += "${RPI_EXTRA_WIC_DEPENDS}"
