@@ -1,3 +1,6 @@
 /build
 /layers
+/test_logs
 .vscode
+.pytest_cache
+__pycache__
