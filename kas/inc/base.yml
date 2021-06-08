@@ -30,7 +30,7 @@ local_conf_header:
     PACKAGE_CLASSES ?= "package_rpm"
     SDKMACHINE ?= "x86_64"
     EXTRA_IMAGE_FEATURES ?= "debug-tweaks"
-    USER_CLASSES ?= "buildstats image-mklibs image-prelink"
+    USER_CLASSES ?= "buildstats image-prelink"
     PATCHRESOLVE = "noop"
     BB_DISKMON_DIRS ?= "\
         STOPTASKS,${TMPDIR},1G,100K \
