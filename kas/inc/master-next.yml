@@ -1,6 +1,0 @@
-header:
-  version: 9
-
-repos:
-  poky:
-    refspec: master-next
