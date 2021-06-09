@@ -6,12 +6,12 @@ set -euo pipefail
 
 SERIES="4.4 4.9 4.14 4.19 5.4 5.10 5.11 5.12"
 
-SCRIPT_DIR=`dirname "$0"`
+SCRIPT_DIR=$(dirname "$0")
 
 echo "Updating recipes..."
 for S in ${SERIES}; do
-    VERSION=`"${SCRIPT_DIR}/find-latest-in-series" ${S}`
-    "${SCRIPT_DIR}/generate-kernel-recipe" ${VERSION} > recipes-kernel/linux/linux-stable_${S}.bb
+    VERSION=$("${SCRIPT_DIR}/find-latest-in-series" "${S}")
+    "${SCRIPT_DIR}/generate-kernel-recipe" "${VERSION}" > "recipes-kernel/linux/linux-stable_${S}.bb"
     echo "    recipes-kernel/linux/linux-stable_${S}.bb: v${VERSION}"
 done
 echo "Done."

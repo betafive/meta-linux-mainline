@@ -25,5 +25,5 @@ if [ $# != 1 ]; then
 fi
 
 VERSION=$1
-VMAJOR=`echo ${VERSION} | cut -d. -f1`
-curl -s https://cdn.kernel.org/pub/linux/kernel/v${VMAJOR}.x/sha256sums.asc | grep ChangeLog-${VERSION} | cut -d'-' -f2 | sort -V | tail -n1
+VMAJOR=$(echo "${VERSION}" | cut -d. -f1)
+curl -s "https://cdn.kernel.org/pub/linux/kernel/v${VMAJOR}.x/sha256sums.asc" | grep "ChangeLog-${VERSION}" | cut -d'-' -f2 | sort -V | tail -n1

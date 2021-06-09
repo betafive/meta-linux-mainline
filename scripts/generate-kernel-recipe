@@ -25,11 +25,11 @@ if [ $# != 1 ]; then
 fi
 
 VERSION=$1
-VMAJOR=`echo ${VERSION} | cut -d. -f1`
-VMINOR=`echo ${VERSION} | cut -d. -f2`
-VPATCH=`echo ${VERSION} | cut -d. -f3`
-SRCREV=`git ls-remote https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git "v${VERSION}^{}" | cut -f1`
-SHA256=`curl -s https://cdn.kernel.org/pub/linux/kernel/v${VMAJOR}.x/sha256sums.asc | grep linux-${VERSION}.tar.xz | cut -d' ' -f1`
+VMAJOR=$(echo "${VERSION}" | cut -d. -f1)
+VMINOR=$(echo "${VERSION}" | cut -d. -f2)
+VPATCH=$(echo "${VERSION}" | cut -d. -f3)
+SRCREV=$(git ls-remote https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git "v${VERSION}^{}" | cut -f1)
+SHA256=$(curl -s "https://cdn.kernel.org/pub/linux/kernel/v${VMAJOR}.x/sha256sums.asc" | grep "linux-${VERSION}.tar.xz" | cut -d' ' -f1)
 
 cat << EOF
 LINUX_VMAJOR = "${VMAJOR}"
