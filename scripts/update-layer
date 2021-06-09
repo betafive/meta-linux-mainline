@@ -1,17 +1,132 @@
-#! /bin/bash
-# Copyright (C) 2020, meta-linux-mainline contributors
+#! /usr/bin/env python3
+# Copyright (C) 2021, meta-linux-mainline contributors
 # SPDX-License-Identifier: MIT
 
-set -euo pipefail
+import re
+import subprocess
+import urllib.request
 
-SERIES="4.4 4.9 4.14 4.19 5.4 5.10 5.11 5.12"
+VMAJOR_LIST = (4, 5)
+VMINOR_LIST = ((4, 4), (4, 9), (4, 14), (4, 19), (5, 4), (5, 10), (5, 11), (5, 12))
 
-SCRIPT_DIR=$(dirname "$0")
 
-echo "Updating recipes..."
-for S in ${SERIES}; do
-    VERSION=$("${SCRIPT_DIR}/find-latest-in-series" "${S}")
-    "${SCRIPT_DIR}/generate-kernel-recipe" "${VERSION}" > "recipes-kernel/linux/linux-stable_${S}.bb"
-    echo "    recipes-kernel/linux/linux-stable_${S}.bb: v${VERSION}"
-done
-echo "Done."
+# Maps (vmajor, vminor) -> sha256
+SHA256_TARBALLS = {}
+
+# Maps (vmajor, vminor) -> (highest patch num, sha256)
+SHA256_PATCHES = {}
+
+
+def load_sha256sums(vmajor):
+    f = urllib.request.urlopen(
+        f"https://cdn.kernel.org/pub/linux/kernel/v{vmajor}.x/sha256sums.asc"
+    )
+    for line in f:
+        line = line.decode("utf-8").strip()
+        if (
+            not line
+            or line == "-----BEGIN PGP SIGNED MESSAGE-----"
+            or line.startswith("Hash:")
+        ):
+            continue
+        if line == "-----BEGIN PGP SIGNATURE-----":
+            break
+        sha256, fname = line.split()
+
+        # Check if this a tarball from a mainline release
+        m = re.fullmatch(fr"linux-{vmajor}\.(\d*)\.tar\.xz", fname)
+        if m:
+            vminor = int(m[1])
+            vkey = (vmajor, vminor)
+            SHA256_TARBALLS[vkey] = sha256
+            continue
+
+        # Check if this is a stable patch
+        m = re.fullmatch(fr"patch-{vmajor}\.(\d*)\.(\d*)\.xz", fname)
+        if m:
+            vminor = int(m[1])
+            vpatch = int(m[2])
+            vkey = (vmajor, vminor)
+            if vkey in SHA256_PATCHES:
+                # Only update the entry if this is the highest numbered patch so far
+                if vpatch < SHA256_PATCHES[vkey][0]:
+                    continue
+            SHA256_PATCHES[vkey] = (vpatch, sha256)
+
+
+def update_stable_recipe(vmajor, vminor):
+    vkey = (vmajor, vminor)
+    sha256_tarball = SHA256_TARBALLS[vkey]
+    vpatch, sha256_patch = SHA256_PATCHES[vkey]
+
+    fname = f"linux-stable_{vmajor}.{vminor}.bb"
+    print(f"Updating {fname} -> {vmajor}.{vminor}.{vpatch}")
+    with open(f"recipes-kernel/linux/{fname}", "w") as f:
+        f.write(f'LINUX_VMAJOR = "{vmajor}"\n')
+        f.write(f'LINUX_VMINOR = "{vminor}"\n')
+        f.write(f'LINUX_VPATCH = "{vpatch}"\n')
+        f.write(f'LINUX_SHA256_TARBALL = "{sha256_tarball}"\n')
+        f.write(f'LINUX_SHA256_PATCH = "{sha256_patch}"\n')
+        f.write("require linux-stable.inc\n")
+
+
+def update_mainline_recipe():
+    # Parse git tags to find the latest
+    p = subprocess.run(
+        [
+            "git",
+            "ls-remote",
+            "--tags",
+            "https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git",
+        ],
+        capture_output=True,
+        check=True,
+    )
+    latest = (0, 0, 0)
+    latest_srcrev = None
+    for line in p.stdout.decode("utf-8").splitlines():
+        version = None
+        srcrev, ref = line.split()
+        m = re.fullmatch(r"refs/tags/v(\d*)\.(\d*)\^{}", ref)
+        if m:
+            vmajor = int(m[1])
+            vminor = int(m[2])
+            version = (vmajor, vminor, 99)
+        m = re.fullmatch(r"refs/tags/v(\d*)\.(\d*)-rc(\d*)\^{}", ref)
+        if m:
+            vmajor = int(m[1])
+            vminor = int(m[2])
+            vrc = int(m[3])
+            version = (vmajor, vminor, vrc)
+
+        if version and (version > latest):
+            latest = version
+            latest_srcrev = srcrev
+
+    # Write the new recipe
+    vmajor, vminor, vrc = latest
+    srcrev = latest_srcrev
+    if vrc != 99:
+        extraversion = f"-rc{vrc}"
+    else:
+        extraversion = None
+    print(f"Updating linux-mainline.bb -> {vmajor}.{vminor}{extraversion}")
+    with open("recipes-kernel/linux/linux-mainline.bb", "w") as f:
+        f.write(f'LINUX_VERSION = "{vmajor}.{vminor}{extraversion}"\n')
+        f.write(f'SRCREV = "{srcrev}"\n')
+        f.write("require linux-mainline.inc\n")
+
+
+def main():
+    print("Loading checksums")
+    for vmajor in VMAJOR_LIST:
+        load_sha256sums(vmajor)
+
+    for vmajor, vminor in VMINOR_LIST:
+        update_stable_recipe(vmajor, vminor)
+
+    update_mainline_recipe()
+    print("Done.")
+
+
+main()
