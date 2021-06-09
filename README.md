@@ -4,8 +4,6 @@ meta-linux-mainline
 A collection of Yocto Project recipes for the mainline and stable Linux
 kernel releases from kernel.org.
 
-[[_TOC_]]
-
 ## Contents of this layer
 
 This layer currently contains the following kernel recipes:
@@ -107,15 +105,28 @@ using the `LINUX_STABLE_DOWNLOAD` variable. The supported values are:
 
 ## Contributing to this layer
 
-To report bugs or request new recipes & features please use our [issue
-tracker][1].
+meta-linux-mainline is developed on [sourcehut](https://sr.ht/) at
+<https://sr.ht/~pbarker/meta-linux-mainline/>.
 
-To submit changes to this layer please fork the repository on GitLab and open
-a [merge request][2].
+If you find any bugs or have a feature request feel free to open a ticket in
+the [issue tracker](https://todo.sr.ht/~pbarker/meta-linux-mainline).
 
-[1]: https://gitlab.com/openembedded/community/meta-linux-mainline/-/issues
-[2]: https://gitlab.com/openembedded/community/meta-linux-mainline/-/merge_requests
+To submit patches to meta-linux-mainline please
+[send them to my public inbox](mailto:~pbarker/public-inbox@lists.sr.ht?subject=[meta-linux-mainline])
+with `[meta-linux-mainline]` in the subject line. Please use
+[plain text email](https://useplaintext.email/) when sending messages to this
+list. Submitted patches and other discussions may be found in the
+[archives](https://lists.sr.ht/~pbarker/public-inbox) of this mailing list. The
+following commands can be used to configure git to format patches appropriately:
+
+```
+git config format.to '~pbarker/public-inbox@lists.sr.ht'
+git config format.subjectPrefix 'meta-linux-mainline][PATCH'
+```
+
+Further instructions on how to set up git to send emails can be found at
+[git-send-email.io](https://git-send-email.io/).
 
 ## Maintainers
 
-Paul Barker \<pbarker@konsulko.com\>
+Paul Barker \<paul@pbarker.dev\>
