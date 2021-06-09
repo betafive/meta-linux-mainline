@@ -1,3 +1,0 @@
-SRC_URI = "${LINUX_GIT_URI}"
-SRCREV = "${LINUX_SRCREV}"
-S = "${WORKDIR}/git"

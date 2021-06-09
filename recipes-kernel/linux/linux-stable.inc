@@ -2,15 +2,21 @@ require linux-mainline-common.inc
 SUMMARY += "(stable)"
 
 LINUX_VERSION = "${LINUX_VMAJOR}.${LINUX_VMINOR}.${LINUX_VPATCH}"
-LINUX_BRANCH = "linux-${LINUX_VMAJOR}.${LINUX_VMINOR}.y"
 PV = "${LINUX_VERSION}"
 
-LINUX_GIT_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git;branch=${LINUX_BRANCH};protocol=https"
-LINUX_TARBALL_URI = "https://cdn.kernel.org/pub/linux/kernel/v${LINUX_VMAJOR}.x/linux-${LINUX_VERSION}.tar.xz"
+SRC_URI = " \
+    https://cdn.kernel.org/pub/linux/kernel/v${LINUX_VMAJOR}.x/linux-${LINUX_VMAJOR}.${LINUX_VMINOR}.tar.xz;name=tarball \
+    https://cdn.kernel.org/pub/linux/kernel/v${LINUX_VMAJOR}.x/patch-${LINUX_VMAJOR}.${LINUX_VMINOR}.${LINUX_VPATCH}.xz;name=patch \
+    "
+SRC_URI[tarball.sha256sum] = "${LINUX_SHA256_TARBALL}"
+SRC_URI[patch.sha256sum] = "${LINUX_SHA256_PATCH}"
+S = "${WORKDIR}/linux-${LINUX_VMAJOR}.${LINUX_VMINOR}"
 
-# The download method may either be 'git' or 'tarball'.
-LINUX_STABLE_DOWNLOAD ??= "git"
-require linux-stable-${LINUX_STABLE_DOWNLOAD}.inc
+do_kpatch() {
+    cd "${S}"
+    patch -Np1 -i "${WORKDIR}/patch-${LINUX_VMAJOR}.${LINUX_VMINOR}.${LINUX_VPATCH}"
+}
+addtask kpatch after do_unpack before do_kernel_checkout
 
 python __anonymous() {
     # Handle checksums of older COPYING files
