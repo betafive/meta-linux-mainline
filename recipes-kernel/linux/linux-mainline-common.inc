@@ -24,3 +24,6 @@ KERNEL_LD_append_arc = " ${TOOLCHAIN_OPTIONS}"
 
 # Ensure virtio block devices are supported for qemu targets
 SRC_URI_append_qemuall = " file://virtio-blk.cfg"
+
+# Enable LPAE support for 32-bit raspberrypi4
+SRC_URI_append_raspberrypi4 = " file://rpi4-lpae.cfg"
