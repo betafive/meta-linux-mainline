@@ -2,25 +2,20 @@
 # Copyright (C) 2021, meta-linux-mainline contributors
 # SPDX-License-Identifier: MIT
 
+import argparse
 import datetime
 import os
 import subprocess
 import sys
 import traceback
 
-RELEASES = ["dunfell", "master"]
-MACHINES = ["qemux86-64", "raspberrypi3"]
-KERNELS = ["5.4", "lts", "stable", "mainline"]
-SITE_CONF = "~/cache/site.conf"
 
-
-def fetch_layers():
-    os.makedirs("layers", exist_ok=True)
-    fetch_one_layer("poky", "https://git.yoctoproject.org/git/poky")
-    if any("raspberrypi" in s for s in MACHINES):
-        fetch_one_layer(
-            "meta-raspberrypi", "https://github.com/agherzan/meta-raspberrypi.git"
-        )
+def pretty_timedelta(t):
+    seconds = t.seconds % 60
+    minutes = t.total_seconds() // 60
+    hours = int(minutes // 60)
+    minutes = int(minutes % 60)
+    return f"{hours:02d}h {minutes:02d}m {seconds:02d}s"
 
 
 def fetch_one_layer(name, url):
@@ -33,12 +28,6 @@ def fetch_one_layer(name, url):
         subprocess.run(["git", "clone", "-q", "--mirror", url, gitdir], check=True)
 
 
-def checkout_layers(workdir, release):
-    checkout_one_layer("poky", workdir, release)
-    if any("raspberrypi" in s for s in MACHINES):
-        checkout_one_layer("meta-raspberrypi", workdir, release)
-
-
 def checkout_one_layer(name, workdir, release):
     gitdir = os.path.join("layers", f"{name}.git")
     checkoutdir = os.path.join(workdir, name)
@@ -49,102 +38,186 @@ def checkout_one_layer(name, workdir, release):
     )
 
 
-def write_conf(workdir, machine, kernel):
-    confdir = os.path.join(workdir, f"build_{machine}_{kernel}", "conf")
-    os.makedirs(confdir)
-    if SITE_CONF:
-        site_conf_path = os.path.expanduser(SITE_CONF)
-        os.symlink(site_conf_path, os.path.join(confdir, "site.conf"))
-    with open(os.path.join(confdir, "auto.conf"), "w") as f:
-        f.write(f'MACHINE = "{machine}"\n')
-        f.write(f"require conf/linux-mainline/bsp/{machine}.inc\n")
-        if kernel not in ("lts", "stable", "mainline"):
-            f.write(f'PREFERRED_VERSION_linux-stable = "{kernel}%"\n')
-            kernel = "stable"
-        f.write(f"require conf/linux-mainline/{kernel}.inc\n")
-        f.write('INHERIT += "rm_work"\n')
-    with open(os.path.join(confdir, "bblayers-auto.conf"), "w") as f:
-        f.write('BBLAYERS += " \\\n')
-        f.write(f"    {os.path.realpath('.')} \\\n")
-        if "raspberrypi" in machine:
-            f.write(f"    {os.path.join(workdir, 'meta-raspberrypi')} \\\n")
-        f.write('"\n')
+class Build:
+    def __init__(self, buildpath, release, machine, kernel):
+        self.workdir = os.path.join(buildpath, release)
+        self.release = release
+        self.machine = machine
+        self.kernel = kernel
+        self.builddir = os.path.join(self.workdir, f"build_{machine}_{kernel}")
 
+    def write_conf(self):
+        confdir = os.path.join(self.builddir, "conf")
+        os.makedirs(confdir)
+        if self.siteconf:
+            os.symlink(self.siteconf, os.path.join(confdir, "site.conf"))
+        with open(os.path.join(confdir, "auto.conf"), "w") as f:
+            f.write(f'MACHINE = "{self.machine}"\n')
+            f.write(f"require conf/linux-mainline/bsp/{self.machine}.inc\n")
+            if self.kernel not in ("lts", "stable", "mainline"):
+                f.write(f'PREFERRED_VERSION_linux-stable = "{self.kernel}%"\n')
+                f.write("require conf/linux-mainline/stable.inc\n")
+            else:
+                f.write(f"require conf/linux-mainline/{self.kernel}.inc\n")
+            f.write('INHERIT += "rm_work"\n')
+        with open(os.path.join(confdir, "bblayers-auto.conf"), "w") as f:
+            f.write('BBLAYERS += " \\\n')
+            f.write(f"    {os.path.realpath('.')} \\\n")
+            if "raspberrypi" in self.machine:
+                f.write(f"    {os.path.join(self.workdir, 'meta-raspberrypi')} \\\n")
+            f.write('"\n')
 
-def build(workdir, machine, kernel):
-    pokydir = os.path.realpath(os.path.join(workdir, "poky"))
-    builddir = os.path.realpath(os.path.join(workdir, f"build_{machine}_{kernel}"))
-    with open(os.path.join(builddir, "build.log"), "a") as f:
-        try:
-            subprocess.run(
-                [
-                    "./scripts/autobuild-wrapper",
-                    pokydir,
-                    builddir,
-                    "bitbake",
-                    "-k",
-                    "core-image-base",
-                ],
-                check=True,
-                stdout=f,
-                stderr=f,
-            )
-        except subprocess.CalledProcessError:
-            traceback.print_exc(file=f)
-            return False
-        return True
+    def build(self):
+        pokydir = os.path.realpath(os.path.join(self.workdir, "poky"))
+        with open(os.path.join(self.builddir, "build.log"), "a") as f:
+            try:
+                subprocess.run(
+                    [
+                        "./scripts/autobuild-wrapper",
+                        pokydir,
+                        self.builddir,
+                        "bitbake",
+                        "-k",
+                        "core-image-base",
+                    ],
+                    check=True,
+                    stdout=f,
+                    stderr=f,
+                )
+            except subprocess.CalledProcessError:
+                traceback.print_exc(file=f)
+                return False
+            return True
 
+    def __call__(self, args):
+        self.siteconf = args.siteconf
 
-def pretty_timedelta(t):
-    seconds = t.seconds % 60
-    minutes = t.total_seconds() // 60
-    hours = int(minutes // 60)
-    minutes = int(minutes % 60)
-    return f"{hours:02d}h {minutes:02d}m {seconds:02d}s"
-
-
-def main():
-    timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    buildpath = os.path.realpath(f"builds_{timestamp}")
-    fetch_layers()
-    for release in RELEASES:
-        workdir = os.path.join(buildpath, release)
-        checkout_layers(workdir, release)
-
-    builds = []
-    for release in RELEASES:
-        for machine in MACHINES:
-            for kernel in KERNELS:
-                b = (release, machine, kernel)
-                builds.append(b)
-
-    count = len(builds)
-    had_error = False
-    print(f"Running {count} builds...")
-    for i, b in enumerate(builds):
         t_start = datetime.datetime.now()
-        release, machine, kernel = b
-        workdir = os.path.join(buildpath, release)
         print(
-            f"[{i+1:03d}/{count:03d}] R={release} M={machine} K={kernel}".ljust(64),
+            f"R={self.release} M={self.machine} K={self.kernel}".ljust(64),
             end="",
             flush=True,
         )
-        write_conf(workdir, machine, kernel)
-        if build(workdir, machine, kernel):
+        self.write_conf()
+        result = self.build()
+        if result:
             print("✔ ", end="", flush=True)
         else:
-            had_error = True
             print("✖ ", end="", flush=True)
         t_stop = datetime.datetime.now()
         t_build = t_stop - t_start
         print(f"in {pretty_timedelta(t_build)}", flush=True)
+        return result
 
-    if not had_error:
-        print("All succeeded.")
+
+class BuildSet:
+    def __init__(self, releases, machines, kernels):
+        self.releases = releases
+        self.machines = machines
+        self.kernels = kernels
+
+    def __len__(self):
+        return len(self.releases) * len(self.machines) * len(self.kernels)
+
+    def __iter__(self):
+        for release in self.releases:
+            for machine in self.machines:
+                for kernel in self.kernels:
+                    yield Build(self.buildpath, release, machine, kernel)
+
+    def fetch_layers(self):
+        os.makedirs("layers", exist_ok=True)
+        fetch_one_layer("poky", "https://git.yoctoproject.org/git/poky")
+        if any("raspberrypi" in s for s in self.machines):
+            fetch_one_layer(
+                "meta-raspberrypi", "https://github.com/agherzan/meta-raspberrypi.git"
+            )
+
+    def checkout_layers(self):
+        for release in self.releases:
+            workdir = os.path.join(self.buildpath, release)
+            checkout_one_layer("poky", workdir, release)
+            if any("raspberrypi" in s for s in self.machines):
+                checkout_one_layer("meta-raspberrypi", workdir, release)
+
+    def build(self, args):
+        count = len(self)
+        had_error = False
+        print(f"Running {count} builds...")
+        for i, build in enumerate(self):
+            print(
+                f"[{i+1:03d}/{count:03d}] ",
+                end="",
+                flush=True,
+            )
+            if not build(args):
+                had_error = True
+
+        if not had_error:
+            print("All succeeded.")
+            return True
+        else:
+            print("Failed!")
+            return False
+
+    def __call__(self, args):
+        timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        self.buildpath = os.path.realpath(f"builds_{timestamp}")
+
+        self.fetch_layers()
+        self.checkout_layers()
+        return self.build(args)
+
+
+BUILDSETS = {
+    "quick": BuildSet(
+        releases=("master",),
+        machines=("qemux86-64",),
+        kernels=("lts", "stable", "mainline"),
+    ),
+    "default": BuildSet(
+        releases=("dunfell", "master"),
+        machines=("qemux86-64", "qemuarm64"),
+        kernels=("lts", "stable", "mainline"),
+    ),
+    "extended": BuildSet(
+        releases=("dunfell", "gatesgarth", "hardknott", "master"),
+        machines=("qemux86-64", "qemuarm64", "qemux86", "qemuarm"),
+        kernels=("lts", "stable", "mainline", "5.4"),
+    ),
+    "all": BuildSet(
+        releases=("dunfell", "gatesgarth", "hardknott", "master"),
+        machines=("qemux86-64", "qemuarm64", "qemux86", "qemuarm"),
+        kernels=(
+            "lts",
+            "stable",
+            "mainline",
+            "4.4",
+            "4.9",
+            "4.14",
+            "4.19",
+            "5.4",
+            "5.11",
+        ),
+    ),
+}
+
+
+def main():
+    parser = argparse.ArgumentParser(
+        description="meta-linux-mainline build script",
+        epilog="Supported buildsets: " + ", ".join(BUILDSETS.keys()),
+    )
+    parser.add_argument(
+        "-b", "--buildset", default="default", help="Select the set of builds to run"
+    )
+    parser.add_argument("-s", "--siteconf", help="Path to a local site.conf file")
+    args = parser.parse_args()
+
+    buildset = BUILDSETS[args.buildset]
+    if buildset(args):
         sys.exit(0)
     else:
-        print("Failed!")
         sys.exit(1)
 
 
