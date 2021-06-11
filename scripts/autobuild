@@ -89,24 +89,38 @@ class Build:
                 return False
             return True
 
-    def __call__(self, args):
-        self.siteconf = args.siteconf
+    def skip(self):
+        if "raspberrypi4" in self.machine and self.kernel not in (
+            "lts",
+            "stable",
+            "mainline",
+        ):
+            kernel_version = tuple([int(s) for s in self.kernel.split(".")])
+            if kernel_version < (5, 10):
+                return True
+        return False
 
-        t_start = datetime.datetime.now()
+    def __call__(self, args):
         print(
             f"R={self.release} M={self.machine} K={self.kernel}".ljust(64),
             end="",
             flush=True,
         )
-        self.write_conf()
-        result = self.build()
-        if result:
-            print("✔ ", end="", flush=True)
+        if self.skip():
+            print("  skipped", flush=True)
+            result = True
         else:
-            print("✖ ", end="", flush=True)
-        t_stop = datetime.datetime.now()
-        t_build = t_stop - t_start
-        print(f"in {pretty_timedelta(t_build)}", flush=True)
+            t_start = datetime.datetime.now()
+            self.siteconf = args.siteconf
+            self.write_conf()
+            result = self.build()
+            if result:
+                print("✔ ", end="", flush=True)
+            else:
+                print("✖ ", end="", flush=True)
+            t_stop = datetime.datetime.now()
+            t_build = t_stop - t_start
+            print(f"in {pretty_timedelta(t_build)}", flush=True)
         return result
 
 
@@ -170,24 +184,38 @@ class BuildSet:
 
 
 BUILDSETS = {
+    "default": BuildSet(
+        releases=("dunfell", "master"),
+        machines=("qemux86-64", "raspberrypi4", "raspberrypi4-64"),
+        kernels=("lts", "stable", "mainline"),
+    ),
     "quick": BuildSet(
         releases=("master",),
         machines=("qemux86-64",),
         kernels=("lts", "stable", "mainline"),
     ),
-    "default": BuildSet(
-        releases=("dunfell", "master"),
-        machines=("qemux86-64", "qemuarm64"),
-        kernels=("lts", "stable", "mainline"),
-    ),
     "extended": BuildSet(
-        releases=("dunfell", "gatesgarth", "hardknott", "master"),
-        machines=("qemux86-64", "qemuarm64", "qemux86", "qemuarm"),
+        releases=("dunfell", "hardknott", "master"),
+        machines=(
+            "qemux86-64",
+            "qemuarm64",
+            "qemux86",
+            "qemuarm",
+            "raspberrypi4",
+            "raspberrypi4-64",
+        ),
         kernels=("lts", "stable", "mainline", "5.4"),
     ),
     "all": BuildSet(
         releases=("dunfell", "gatesgarth", "hardknott", "master"),
-        machines=("qemux86-64", "qemuarm64", "qemux86", "qemuarm"),
+        machines=(
+            "qemux86-64",
+            "qemuarm64",
+            "qemux86",
+            "qemuarm",
+            "raspberrypi4",
+            "raspberrypi4-64",
+        ),
         kernels=(
             "lts",
             "stable",
