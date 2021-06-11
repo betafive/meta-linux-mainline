@@ -1,11 +1,9 @@
-RPI_KERNEL_DEVICETREE = " \
-    bcm2837-rpi-3-b.dtb \
-    bcm2837-rpi-3-b-plus.dtb \
-    "
-RPI_KERNEL_DEVICETREE_OVERLAYS = ""
+KERNEL_DEVICETREE = "bcm2711-rpi-4-b.dtb"
 RPI_EXTRA_CONFIG += " \
     upstream_kernel=1 \n \
     avoid_warnings=2 \n"
+
+CMDLINE_ROOTFS = "root=/dev/mmcblk1p2 rootfstype=ext4 rootwait"
 
 KBUILD_DEFCONFIG = "multi_v7_defconfig"
 KCONFIG_MODE = "alldefconfig"
@@ -17,10 +15,11 @@ do_image_wic[depends] += "${RPI_EXTRA_WIC_DEPENDS}"
 
 python __anonymous() {
     # Make sure that the selected kernel version supports the target machine
-    if d.getVar("PN") == "linux-stable" and d.getVar("MACHINE") == "raspberrypi3":
+    machine = d.getVar("MACHINE")
+    if d.getVar("PN") == "linux-stable" and "raspberrypi4" in machine:
         vmajor = int(d.getVar("LINUX_VMAJOR"))
         vminor = int(d.getVar("LINUX_VMINOR"))
-        if (vmajor, vminor) < (4, 19):
-            msg = "Skipping linux-stable recipe (from meta-linux-mainline) as it is too old to support raspberrypi3"
+        if (vmajor, vminor) < (5, 10):
+            msg = "Skipping linux-stable recipe (from meta-linux-mainline) as it is too old to support %s" % (machine)
             raise bb.parse.SkipRecipe(msg)
 }
