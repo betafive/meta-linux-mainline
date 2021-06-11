@@ -21,3 +21,6 @@ KERNEL_LD_append_nios2 = " ${TOOLCHAIN_OPTIONS}"
 DEPENDS_append_arc = " libgcc"
 KERNEL_CC_append_arc = " ${TOOLCHAIN_OPTIONS}"
 KERNEL_LD_append_arc = " ${TOOLCHAIN_OPTIONS}"
+
+# Ensure virtio block devices are supported for qemu targets
+SRC_URI_append_qemuall = " file://virtio-blk.cfg"
