@@ -79,30 +79,6 @@ or distro conf file:
 
     include conf/linux-mainline/bsp/${MACHINE}
 
-#### Using kas
-
-The kas build configuration in this repository demonstrate how this can be
-achieved for both qemux86-64 (from the openembeded-core layer) and
-raspberrypi3 (from the
-[meta-raspberrypi](https://github.com/agherzan/meta-raspberrypi) BSP layer.
-These configurations are used with the [kas](https://github.com/siemens/kas)
-tool.
-
-### Additional configuration options
-
-The `linux-stable` recipes allow the source download method to be chosen
-using the `LINUX_STABLE_DOWNLOAD` variable. The supported values are:
-
-* `git` (default): The `linux-stable` git repository is pulled from
-  git.kernel.org. This method requires more bandwidth for the initial download
-  but subsequent updates will be faster.
-
-* `tarball`: The release tarball for the selected kernel recipe is downloaded.
-  This method requires less bandwidth for the initial download but after
-  several updates may result in higher overall bandwidth use. This method is
-  best suited to throw-away build environments or one-off builds where future
-  updates are not expected to use the same downloads directory.
-
 ## Contributing to this layer
 
 meta-linux-mainline is developed on [sourcehut](https://sr.ht/) at
