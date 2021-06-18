@@ -25,7 +25,7 @@ For a detailed list of all changes consult the git log.
   branch.
 
 * Project home is moved to sourehut:
-  <https://git.sr.ht/~pbarker/meta-linux-mainline>.
+  <https://sr.ht/~pbarker/meta-linux-mainline/>.
 
 * Update default LTS kernel to 5.10 series.
 
