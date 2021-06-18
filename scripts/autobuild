@@ -175,9 +175,7 @@ class BuildSet:
             return False
 
     def __call__(self, args):
-        timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-        self.buildpath = os.path.realpath(f"builds_{timestamp}")
-
+        self.buildpath = args.buildpath
         self.fetch_layers()
         self.checkout_layers()
         return self.build(args)
@@ -240,7 +238,12 @@ def main():
         "-b", "--buildset", default="default", help="Select the set of builds to run"
     )
     parser.add_argument("-s", "--siteconf", help="Path to a local site.conf file")
+    parser.add_argument("-p", "--buildpath", help="Path to build directory")
     args = parser.parse_args()
+
+    if not args.buildpath:
+        timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        args.buildpath = os.path.realpath(f"builds_{timestamp}")
 
     buildset = BUILDSETS[args.buildset]
     if buildset(args):
