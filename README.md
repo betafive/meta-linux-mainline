@@ -1,3 +1,8 @@
+<!--
+Copyright (C) 2021, meta-linux-mainline contributors
+SPDX-License-Identifier: CC-BY-4.0
+-->
+
 meta-linux-mainline
 ===================
 

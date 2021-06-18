@@ -1,3 +1,6 @@
+# Copyright (C) 2020-2021, meta-linux-mainline contributors
+# SPDX-License-Identifier: MIT
+
 KERNEL_DEVICETREE = "bcm2711-rpi-4-b.dtb"
 RPI_EXTRA_CONFIG += " \
     upstream_kernel=1 \n \
