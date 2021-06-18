@@ -1,6 +1,8 @@
+# Copyright (C) 2021, meta-linux-mainline contributors (auto-generated file)
+# SPDX-License-Identifier: CC0-1.0
 LINUX_VMAJOR = "4"
 LINUX_VMINOR = "9"
-LINUX_VPATCH = "271"
+LINUX_VPATCH = "273"
 LINUX_SHA256_TARBALL = "029098dcffab74875e086ae970e3828456838da6e0ba22ce3f64ef764f3d7f1a"
-LINUX_SHA256_PATCH = "9052cb68f4854a61cae4603bad887fa8404824febe7fe04bc9f930db787c9197"
+LINUX_SHA256_PATCH = "cbb4e08f9adb4a482ccdcb1ea531996084d70e728aedd4cd7e28feb2fe66d603"
 require linux-stable.inc

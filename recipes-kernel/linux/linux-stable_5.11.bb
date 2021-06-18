@@ -1,3 +1,5 @@
+# Copyright (C) 2021, meta-linux-mainline contributors (auto-generated file)
+# SPDX-License-Identifier: CC0-1.0
 LINUX_VMAJOR = "5"
 LINUX_VMINOR = "11"
 LINUX_VPATCH = "22"
