@@ -3,6 +3,7 @@
 # SPDX-License-Identifier: MIT
 
 import re
+import textwrap
 import subprocess
 import urllib.request
 
@@ -62,12 +63,20 @@ def update_stable_recipe(vmajor, vminor):
     fname = f"linux-stable_{vmajor}.{vminor}.bb"
     print(f"Updating {fname} -> {vmajor}.{vminor}.{vpatch}")
     with open(f"recipes-kernel/linux/{fname}", "w") as f:
-        f.write(f'LINUX_VMAJOR = "{vmajor}"\n')
-        f.write(f'LINUX_VMINOR = "{vminor}"\n')
-        f.write(f'LINUX_VPATCH = "{vpatch}"\n')
-        f.write(f'LINUX_SHA256_TARBALL = "{sha256_tarball}"\n')
-        f.write(f'LINUX_SHA256_PATCH = "{sha256_patch}"\n')
-        f.write("require linux-stable.inc\n")
+        f.write(
+            textwrap.dedent(
+                f"""\
+                # Copyright (C) 2021, meta-linux-mainline contributors (auto-generated file)
+                # SPDX-License-Identifier: CC0-1.0
+                LINUX_VMAJOR = "{vmajor}"
+                LINUX_VMINOR = "{vminor}"
+                LINUX_VPATCH = "{vpatch}"
+                LINUX_SHA256_TARBALL = "{sha256_tarball}"
+                LINUX_SHA256_PATCH = "{sha256_patch}"
+                require linux-stable.inc
+                """
+            )
+        )
 
 
 def update_mainline_recipe():
@@ -112,9 +121,17 @@ def update_mainline_recipe():
         extraversion = None
     print(f"Updating linux-mainline.bb -> {vmajor}.{vminor}{extraversion}")
     with open("recipes-kernel/linux/linux-mainline.bb", "w") as f:
-        f.write(f'LINUX_VERSION = "{vmajor}.{vminor}{extraversion}"\n')
-        f.write(f'SRCREV = "{srcrev}"\n')
-        f.write("require linux-mainline.inc\n")
+        f.write(
+            textwrap.dedent(
+                f"""\
+                # Copyright (C) 2021, meta-linux-mainline contributors (auto-generated file)
+                # SPDX-License-Identifier: CC0-1.0
+                LINUX_VERSION = "{vmajor}.{vminor}{extraversion}"
+                SRCREV = "{srcrev}"
+                require linux-mainline.inc
+                """
+            )
+        )
 
 
 def main():
