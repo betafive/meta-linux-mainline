@@ -5,11 +5,14 @@
 import re
 import textwrap
 import subprocess
+import sys
 import urllib.request
 
-VMAJOR_LIST = (4, 5)
-VMINOR_LIST = ((4, 4), (4, 9), (4, 14), (4, 19), (5, 4), (5, 10), (5, 11), (5, 12))
+if sys.version_info < (3, 7):
+    print("ERROR: This script requires Python 3.7 or later!")
+    sys.exit(1)
 
+VMINOR_LIST = ((4, 4), (4, 9), (4, 14), (4, 19), (5, 4), (5, 10), (5, 11), (5, 12))
 
 # Maps (vmajor, vminor) -> sha256
 SHA256_TARBALLS = {}
@@ -136,7 +139,7 @@ def update_mainline_recipe():
 
 def main():
     print("Loading checksums")
-    for vmajor in VMAJOR_LIST:
+    for vmajor in set([vmajor for vmajor, _ in VMINOR_LIST]):
         load_sha256sums(vmajor)
 
     for vmajor, vminor in VMINOR_LIST:
