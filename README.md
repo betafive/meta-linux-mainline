@@ -9,6 +9,53 @@ meta-linux-mainline
 A collection of Yocto Project recipes for the mainline and stable Linux
 kernel releases from kernel.org.
 
+<!--TOC-->
+
+- [Goals and non-goals of this layer](#goals-and-non-goals-of-this-layer)
+  - [Goals: things this layer is intentionally aiming to achieve](#goals-things-this-layer-is-intentionally-aiming-to-achieve)
+  - [Non-goals: things this layer is intentionally aiming *not* to achieve](#non-goals-things-this-layer-is-intentionally-aiming-not-to-achieve)
+- [Contents of this layer](#contents-of-this-layer)
+- [Using this layer](#using-this-layer)
+  - [As a dependency of a BSP layer](#as-a-dependency-of-a-bsp-layer)
+  - [Replacing your vendor kernel](#replacing-your-vendor-kernel)
+- [Contributing to this layer](#contributing-to-this-layer)
+- [Maintainers](#maintainers)
+- [License](#license)
+
+<!--TOC-->
+
+## Goals and non-goals of this layer
+
+### Goals: things this layer is intentionally aiming to achieve
+
+* We provide recipes for all Linux kernel releases currently supported on
+  kernel.org. These recipes are regularly updated to make it easy to follow
+  mainline releases, the latest stable series or a chosen LTS release series.
+
+* We aim to be compatible with all currently supported Yocto Project releases as
+  well as the upstream master branch.
+
+* We provide examples of how to use this layer in the form of BSP configurations
+  for various QEMU and Raspberry Pi targets.
+
+### Non-goals: things this layer is intentionally aiming *not* to achieve
+
+* We do not carry patches against upstream kernel releases without a documented,
+  exceptionally good reason.
+
+* We do not support obsolete kernel versions. Recipes are only provided for the
+  latest patch release within a given release series. Once a release series
+  becomes End-Of-Life (EOL) on kernel.org, the corresponding recipe will be
+  removed from this layer.
+
+* We provide no guarantees that kernels built with this layer will boot
+  successfully on your hardware or that particular features (e.g. perf) will
+  work out of the box. The example BSP configurations are not intended to be
+  directly used in production. To use this layer in production, create your own
+  layer for configuration & integration and use this layer as a dependency.
+
+* We do not aim to replace the linux-yocto kernel from the Yocto Project.
+
 ## Contents of this layer
 
 This layer currently contains the following kernel recipes:
@@ -92,13 +139,21 @@ meta-linux-mainline is developed on [sourcehut](https://sr.ht/) at
 If you find any bugs or have a feature request feel free to open a ticket in
 the [issue tracker](https://todo.sr.ht/~pbarker/meta-linux-mainline).
 
-To submit patches to meta-linux-mainline please
-[send them to my public inbox](mailto:~pbarker/public-inbox@lists.sr.ht?subject=[meta-linux-mainline])
+We welcome contributions to this layer, provided that they fit within the
+[goals and non-goals of this layer](#goals-and-non-goals-of-this-layer)
+identified above. Each commit or patch must include a `Signed-off-by` line
+indicating acceptance of the [Developer's Certificate of Origin](DCO.txt) for it
+to be accepted into this layer.
+
+Please send patches and pull requests for this project to the maintainer's
+[public inbox](mailto:~pbarker/public-inbox@lists.sr.ht?subject=[meta-linux-mainline])
 with `[meta-linux-mainline]` in the subject line. Please use
 [plain text email](https://useplaintext.email/) when sending messages to this
 list. Submitted patches and other discussions may be found in the
-[archives](https://lists.sr.ht/~pbarker/public-inbox) of this mailing list. The
-following commands can be used to configure git to format patches appropriately:
+[archives](https://lists.sr.ht/~pbarker/public-inbox) of this mailing list.
+
+The following commands can be used to configure git to format patches
+appropriately:
 
 ```
 git config format.to '~pbarker/public-inbox@lists.sr.ht'
@@ -111,3 +166,19 @@ Further instructions on how to set up git to send emails can be found at
 ## Maintainers
 
 Paul Barker \<paul@pbarker.dev\>
+
+## License
+
+The files in this repository are distributed under various licenses depending on
+the type of content:
+
+* Recipes, config files and scripts in this layer are distributed under the
+  [MIT License](LICENSES/MIT.txt) for compatibility with other Yocto Project
+  layers, with the exception of auto-generated files.
+
+* Documentation files (such as this readme) are distributed under the
+  [Creative Commons Attribution 4.0 International License](LICENSES/CC-BY-4.0.txt).
+
+* Metadata files, trivial configuration files and auto-generated files (such as
+  the `MAINTAINERS` list, `.gitignore` and `linux-mainline.bb`) are distributed
+  under the [CC0 1.0 Public Domain Dedication](LICENSES/CC0-1.0.txt).
