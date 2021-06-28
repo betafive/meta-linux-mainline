@@ -121,7 +121,7 @@ def update_mainline_recipe():
     if vrc != 99:
         extraversion = f"-rc{vrc}"
     else:
-        extraversion = None
+        extraversion = ""
     print(f"Updating linux-mainline.bb -> {vmajor}.{vminor}{extraversion}")
     with open("recipes-kernel/linux/linux-mainline.bb", "w") as f:
         f.write(
