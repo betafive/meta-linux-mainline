@@ -31,6 +31,10 @@ repos:
     rev: 8.0.0
     hooks:
     -   id: md-toc
+-   repo: https://github.com/pycqa/isort
+    rev: 5.9.2
+    hooks:
+    -   id: isort
 
 # Disabled for now:
 # -   repo: https://github.com/fsfe/reuse-tool
