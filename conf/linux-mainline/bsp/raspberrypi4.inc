@@ -10,11 +10,10 @@ CMDLINE_ROOTFS = "root=/dev/mmcblk1p2 rootfstype=ext4 rootwait"
 
 KBUILD_DEFCONFIG = "multi_v7_defconfig"
 KCONFIG_MODE = "alldefconfig"
-MACHINE_FEATURES_remove_rpi = "vc4graphics"
-DISTRO_FEATURES_remove_rpi = "opengl x11 wayland vulkan"
+DISABLE_VC4GRAPHICS = "1"
+DISTRO_FEATURES_remove = "opengl x11 wayland vulkan"
 
-RPI_EXTRA_WIC_DEPENDS_rpi = "rpi-cmdline:do_deploy"
-do_image_wic[depends] += "${RPI_EXTRA_WIC_DEPENDS}"
+do_image_wic[depends] += "rpi-cmdline:do_deploy"
 
 python __anonymous() {
     # Make sure that the selected kernel version supports the target machine
