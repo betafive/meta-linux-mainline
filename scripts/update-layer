@@ -63,10 +63,11 @@ def update_stable_recipe(vmajor, vminor):
     sha256_tarball = SHA256_TARBALLS[vkey]
     vpatch, sha256_patch = SHA256_PATCHES[vkey]
 
-    fname = f"linux-stable_{vmajor}.{vminor}.bb"
-    print(f"Updating {fname} -> {vmajor}.{vminor}.{vpatch}")
-    with open(f"recipes-kernel/linux/{fname}", "w") as f:
-        f.write(
+    fname = f"recipes-kernel/linux/linux-stable_{vmajor}.{vminor}.bb"
+    old_recipe = open(fname, "r").read()
+    old_vpatch = int(re.search(r'LINUX_VPATCH = "(\d+)"', old_recipe)[1])
+    if old_vpatch != vpatch:
+        open(fname, "w").write(
             textwrap.dedent(
                 f"""\
                 # Copyright (C) 2021, meta-linux-mainline contributors (auto-generated file)
@@ -80,6 +81,9 @@ def update_stable_recipe(vmajor, vminor):
                 """
             )
         )
+        return vpatch
+    else:
+        return None
 
 
 def update_mainline_recipe():
@@ -115,37 +119,82 @@ def update_mainline_recipe():
             latest = version
             latest_srcrev = srcrev
 
-    # Write the new recipe
-    vmajor, vminor, vrc = latest
-    srcrev = latest_srcrev
-    if vrc != 99:
-        extraversion = f"-rc{vrc}"
+    old_recipe = open("recipes-kernel/linux/linux-mainline.bb", "r").read()
+    m = re.search(r'LINUX_VERSION = "(\d+)\.(\d+)(?:-rc(\d+))?"', old_recipe).groups()
+    if m[2]:
+        old_version = (int(m[0]), int(m[1]), int(m[2]))
     else:
-        extraversion = ""
-    print(f"Updating linux-mainline.bb -> {vmajor}.{vminor}{extraversion}")
-    with open("recipes-kernel/linux/linux-mainline.bb", "w") as f:
-        f.write(
+        old_version = (int(m[0]), int(m[1]), 99)
+
+    if old_version != latest:
+        # Write the new recipe
+        vmajor, vminor, vrc = latest
+        version = f"{vmajor}.{vminor}"
+        if vrc != 99:
+            version += f"-rc{vrc}"
+
+        open("recipes-kernel/linux/linux-mainline.bb", "w").write(
             textwrap.dedent(
                 f"""\
                 # Copyright (C) 2021, meta-linux-mainline contributors (auto-generated file)
                 # SPDX-License-Identifier: CC0-1.0
-                LINUX_VERSION = "{vmajor}.{vminor}{extraversion}"
-                SRCREV = "{srcrev}"
+                LINUX_VERSION = "{version}"
+                SRCREV = "{latest_srcrev}"
                 require linux-mainline.inc
                 """
             )
         )
+        return version
+    else:
+        return None
+
+
+def commit_stable_kernels(versions):
+    msg = "linux-stable: Uprev recipes\n\nNew kernel versions:\n\n"
+    for vmajor, vminor, vpatch in versions:
+        subprocess.run(
+            ["git", "add", f"recipes-kernel/linux/linux-stable_{vmajor}.{vminor}.bb"],
+            check=True,
+        )
+        msg += f"    * {vmajor}.{vminor}.{vpatch}\n"
+    subprocess.run(
+        ["git", "commit", "-s", "-F", "-"], input=msg.encode("utf-8"), check=True
+    )
+
+
+def commit_mainline_kernel(version):
+    msg = f"linux-mainline: Uprev to {version}"
+    subprocess.run(["git", "add", "recipes-kernel/linux/linux-mainline.bb"], check=True)
+    subprocess.run(
+        ["git", "commit", "-s", "-F", "-"], input=msg.encode("utf-8"), check=True
+    )
+
+
+def check_for_unstaged_changes():
+    r = subprocess.run(["git", "diff-index", "--quiet", "HEAD"])
+    if r.returncode:
+        print("Error: Repository is not clean")
+        sys.exit(1)
 
 
 def main():
-    print("Loading checksums")
     for vmajor in set([vmajor for vmajor, _ in VMINOR_LIST]):
         load_sha256sums(vmajor)
 
-    for vmajor, vminor in VMINOR_LIST:
-        update_stable_recipe(vmajor, vminor)
+    check_for_unstaged_changes()
 
-    update_mainline_recipe()
+    new_stable_kernels = []
+    for vmajor, vminor in VMINOR_LIST:
+        new_vpatch = update_stable_recipe(vmajor, vminor)
+        if new_vpatch:
+            new_stable_kernels.append([vmajor, vminor, new_vpatch])
+    if new_stable_kernels:
+        commit_stable_kernels(new_stable_kernels)
+
+    new_mainline_kernel = update_mainline_recipe()
+    if new_mainline_kernel:
+        commit_mainline_kernel(new_mainline_kernel)
+
     print("Done.")
 
 
