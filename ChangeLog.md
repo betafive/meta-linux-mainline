@@ -16,6 +16,28 @@ the default LTS release series will be documented here.
 
 For a detailed list of all changes consult the git log.
 
+2021-08-05
+----------
+
+* Convert to the new override syntax required by the master branch of bitbake,
+  openembedded-core & poky. Compatibility with all releases since dunfell should
+  be maintained as support for the new syntax has been backported to the
+  relevant bitbake branches. However, if the old syntax is needed for any reason
+  it can still be activated by adding the following assignment to your local or
+  distro conf file:
+
+      LINUX_MAINLINE_OVERRIDE_SYNTAX = "old"
+
+  Support for the old syntax will be retained for a few months before final
+  removal.
+
+* Simplified the raspberrypi4 config and kernel inc files to not use unnecessary
+  overrides.
+
+* Drop support for gatesgarth branch.
+
+* Extended the update-layer script to automatically commit changes.
+
 2021-06-18
 ----------
 
