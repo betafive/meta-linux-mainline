@@ -64,8 +64,11 @@ def update_stable_recipe(vmajor, vminor):
     vpatch, sha256_patch = SHA256_PATCHES[vkey]
 
     fname = f"recipes-kernel/linux/linux-stable_{vmajor}.{vminor}.bb"
-    old_recipe = open(fname, "r").read()
-    old_vpatch = int(re.search(r'LINUX_VPATCH = "(\d+)"', old_recipe)[1])
+    try:
+        old_recipe = open(fname, "r").read()
+        old_vpatch = int(re.search(r'LINUX_VPATCH = "(\d+)"', old_recipe)[1])
+    except FileNotFoundError:
+        old_vpatch = None
     if old_vpatch != vpatch:
         open(fname, "w").write(
             textwrap.dedent(
