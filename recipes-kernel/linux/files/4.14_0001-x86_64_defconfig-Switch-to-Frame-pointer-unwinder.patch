@@ -1,0 +1,29 @@
+From 5e5469efdaf3edfac603c761799f242f66b3d3e6 Mon Sep 17 00:00:00 2001
+From: Paul Barker <paul@pbarker.dev>
+Date: Mon, 17 Jan 2022 09:09:31 +0000
+Subject: [PATCH] x86_64_defconfig: Switch to Frame pointer unwinder
+
+This fixes the build for Linux 4.14.y on the Yocto Project master
+branch.
+
+Signed-off-by: Paul Barker <paul@pbarker.dev>
+---
+ arch/x86/configs/x86_64_defconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/x86/configs/x86_64_defconfig b/arch/x86/configs/x86_64_defconfig
+index d387193ef7fc..1ded1c6c93c4 100644
+--- a/arch/x86/configs/x86_64_defconfig
++++ b/arch/x86/configs/x86_64_defconfig
+@@ -299,7 +299,7 @@ CONFIG_DEBUG_STACKOVERFLOW=y
+ # CONFIG_DEBUG_RODATA_TEST is not set
+ CONFIG_DEBUG_BOOT_PARAMS=y
+ CONFIG_OPTIMIZE_INLINING=y
+-CONFIG_UNWINDER_ORC=y
++CONFIG_UNWINDER_FRAME_POINTER=y
+ CONFIG_SECURITY=y
+ CONFIG_SECURITY_NETWORK=y
+ CONFIG_SECURITY_SELINUX=y
+-- 
+2.34.1
+
