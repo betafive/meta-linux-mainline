@@ -11,7 +11,7 @@ CMDLINE_ROOTFS = "root=/dev/mmcblk1p2 rootfstype=ext4 rootwait"
 KBUILD_DEFCONFIG = "multi_v7_defconfig"
 KCONFIG_MODE = "alldefconfig"
 DISABLE_VC4GRAPHICS = "1"
-require conf/linux-mainline/bsp/rpi-overrides-${LINUX_MAINLINE_OVERRIDE_SYNTAX}.inc
+DISTRO_FEATURES:remove = "opengl x11 wayland vulkan"
 
 do_image_wic[depends] += "rpi-cmdline:do_deploy"
 
