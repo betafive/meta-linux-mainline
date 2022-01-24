@@ -202,7 +202,7 @@ BUILDSETS = {
             "raspberrypi4",
             "raspberrypi4-64",
         ),
-        kernels=("lts", "stable", "mainline", "5.4"),
+        kernels=("lts", "stable", "mainline", "5.10"),
     ),
     "all": BuildSet(
         releases=("dunfell", "honister", "master"),
@@ -223,6 +223,7 @@ BUILDSETS = {
             "4.14",
             "4.19",
             "5.4",
+            "5.10",
         ),
     ),
 }
