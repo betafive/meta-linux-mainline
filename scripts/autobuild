@@ -218,7 +218,6 @@ BUILDSETS = {
             "lts",
             "stable",
             "mainline",
-            "4.4",
             "4.9",
             "4.14",
             "4.19",
