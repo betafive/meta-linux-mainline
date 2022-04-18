@@ -129,7 +129,7 @@ vanilla kernel if it is not supported already by the relevant BSP layer. To
 use the appropriate `.inc` file, add the following line to your `local.conf`
 or distro conf file:
 
-    include conf/linux-mainline/bsp/${MACHINE}
+    include conf/linux-mainline/bsp/${MACHINE}.inc
 
 ## Contributing to this layer
 
