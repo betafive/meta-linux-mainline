@@ -38,7 +38,7 @@ def load_sha256sums(vmajor):
         sha256, fname = line.split()
 
         # Check if this a tarball from a mainline release
-        m = re.fullmatch(fr"linux-{vmajor}\.(\d*)\.tar\.xz", fname)
+        m = re.fullmatch(rf"linux-{vmajor}\.(\d*)\.tar\.xz", fname)
         if m:
             vminor = int(m[1])
             vkey = (vmajor, vminor)
@@ -46,7 +46,7 @@ def load_sha256sums(vmajor):
             continue
 
         # Check if this is a stable patch
-        m = re.fullmatch(fr"patch-{vmajor}\.(\d*)\.(\d*)\.xz", fname)
+        m = re.fullmatch(rf"patch-{vmajor}\.(\d*)\.(\d*)\.xz", fname)
         if m:
             vminor = int(m[1])
             vpatch = int(m[2])
