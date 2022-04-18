@@ -10,6 +10,9 @@ import sys
 import traceback
 
 
+SOURCEPATH = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+
+
 def pretty_timedelta(t):
     seconds = t.seconds % 60
     minutes = t.total_seconds() // 60
@@ -62,7 +65,7 @@ class Build:
             f.write('INHERIT += "rm_work"\n')
         with open(os.path.join(confdir, "bblayers-auto.conf"), "w") as f:
             f.write('BBLAYERS += " \\\n')
-            f.write(f"    {os.path.realpath('.')} \\\n")
+            f.write(f"    {SOURCEPATH} \\\n")
             if "raspberrypi" in self.machine:
                 f.write(f"    {os.path.join(self.workdir, 'meta-raspberrypi')} \\\n")
             f.write('"\n')
@@ -73,7 +76,7 @@ class Build:
             try:
                 subprocess.run(
                     [
-                        "./scripts/autobuild-wrapper",
+                        f"{SOURCEPATH}/scripts/autobuild-wrapper",
                         pokydir,
                         self.builddir,
                         "bitbake",
