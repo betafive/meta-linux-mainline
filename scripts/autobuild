@@ -197,7 +197,7 @@ BUILDSETS = {
         kernels=("lts", "stable", "mainline"),
     ),
     "extended": BuildSet(
-        releases=("dunfell", "honister", "master"),
+        releases=("dunfell", "kirkstone", "master"),
         machines=(
             "qemux86-64",
             "qemuarm64",
@@ -209,7 +209,7 @@ BUILDSETS = {
         kernels=("lts", "stable", "mainline", "5.10"),
     ),
     "all": BuildSet(
-        releases=("dunfell", "honister", "master"),
+        releases=("dunfell", "kirkstone", "master"),
         machines=(
             "qemux86-64",
             "qemuarm64",
