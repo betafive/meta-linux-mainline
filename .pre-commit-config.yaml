@@ -3,7 +3,7 @@
 
 repos:
 -   repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.3.0
+    rev: v4.4.0
     hooks:
     -   id: check-merge-conflict
     -   id: check-symlinks
@@ -11,15 +11,15 @@ repos:
     -   id: end-of-file-fixer
     -   id: mixed-line-ending
 -   repo: https://github.com/psf/black
-    rev: 22.8.0
+    rev: 22.10.0
     hooks:
     -   id: black
 -   repo: https://github.com/PyCQA/flake8
-    rev: 5.0.4
+    rev: 6.0.0
     hooks:
     -   id: flake8
 -   repo: https://github.com/markdownlint/markdownlint
-    rev: v0.11.0
+    rev: v0.12.0
     hooks:
     -   id: markdownlint
 -   repo: https://github.com/shellcheck-py/shellcheck-py
@@ -27,7 +27,7 @@ repos:
     hooks:
     -   id: shellcheck
 -   repo: https://github.com/frnmst/md-toc
-    rev: 8.1.4
+    rev: 8.1.5
     hooks:
     -   id: md-toc
 -   repo: https://github.com/pycqa/isort
