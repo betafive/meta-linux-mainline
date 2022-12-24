@@ -94,7 +94,11 @@ class Build:
             return True
 
     def skip(self):
-        if "raspberrypi4" in self.machine and self.kernel not in (
+        if "riscv" in self.machine and self.release == "dunfell":
+            return True
+        if (
+            ("raspberrypi4" in self.machine) or ("riscv" in self.machine)
+        ) and self.kernel not in (
             "lts",
             "stable",
             "mainline",
@@ -187,8 +191,8 @@ class BuildSet:
 
 BUILDSETS = {
     "default": BuildSet(
-        releases=("dunfell", "master"),
-        machines=("qemux86-64", "raspberrypi4", "raspberrypi4-64"),
+        releases=("kirkstone", "master"),
+        machines=("qemux86-64", "qemuriscv64", "raspberrypi4-64"),
         kernels=("lts", "stable", "mainline"),
     ),
     "quick": BuildSet(
@@ -201,20 +205,22 @@ BUILDSETS = {
         machines=(
             "qemux86-64",
             "qemuarm64",
+            "qemuriscv64",
             "qemux86",
-            "qemuarm",
             "raspberrypi4",
             "raspberrypi4-64",
         ),
         kernels=("lts", "stable", "mainline", "5.10"),
     ),
     "all": BuildSet(
-        releases=("dunfell", "kirkstone", "master"),
+        releases=("dunfell", "kirkstone", "langdale", "master"),
         machines=(
             "qemux86-64",
             "qemuarm64",
+            "qemuriscv64",
             "qemux86",
             "qemuarm",
+            "qemuriscv32",
             "raspberrypi4",
             "raspberrypi4-64",
         ),
@@ -227,6 +233,21 @@ BUILDSETS = {
             "4.19",
             "5.4",
             "5.10",
+            "6.0",
+        ),
+    ),
+    "riscv": BuildSet(
+        releases=("kirkstone", "master"),
+        machines=(
+            "qemuriscv64",
+            "qemuriscv32",
+        ),
+        kernels=(
+            "lts",
+            "stable",
+            "mainline",
+            "5.10",
+            "6.0",
         ),
     ),
 }
