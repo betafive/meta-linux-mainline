@@ -1,0 +1,18 @@
+# Copyright (C) 2022, meta-linux-mainline contributors
+# SPDX-License-Identifier: MIT
+
+name: Update Yocto Project tracking branches
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  update-branches:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - run: git push origin HEAD:master
+      - run: git push origin HEAD:dunfell
+      - run: git push origin HEAD:kirkstone
+      - run: git push origin HEAD:langdale
