@@ -64,6 +64,8 @@ class Build:
             f.write('INHERIT += "rm_work"\n')
             f.write(f'DL_DIR = "{os.path.realpath("downloads")}"\n')
             f.write(f'SSTATE_DIR = "{os.path.realpath("sstate-cache")}"\n')
+            if "raspberrypi" in self.machine:
+                f.write('LICENSE_FLAGS_ACCEPTED += "synaptics-killswitch"\n')
         with open(os.path.join(confdir, "bblayers-auto.conf"), "w") as f:
             f.write('BBLAYERS += " \\\n')
             f.write(f"    {SOURCEPATH} \\\n")
