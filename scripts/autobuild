@@ -252,6 +252,20 @@ BUILDSETS = {
             "6.0",
         ),
     ),
+    "rpi": BuildSet(
+        releases=("dunfell", "kirkstone", "langdale", "master"),
+        machines=(
+            "raspberrypi4",
+            "raspberrypi4-64",
+        ),
+        kernels=(
+            "lts",
+            "stable",
+            "mainline",
+            "5.10",
+            "6.0",
+        ),
+    ),
 }
 
 
