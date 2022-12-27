@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - run: git push origin HEAD:master
-      - run: git push origin HEAD:dunfell
-      - run: git push origin HEAD:kirkstone
-      - run: git push origin HEAD:langdale
+      - run: git push --force origin HEAD:master
+      - run: git push --force origin HEAD:dunfell
+      - run: git push --force origin HEAD:kirkstone
+      - run: git push --force origin HEAD:langdale
