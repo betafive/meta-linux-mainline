@@ -2,4 +2,4 @@
 # SPDX-License-Identifier: MIT
 
 require conf/linux-mainline/stable.inc
-PREFERRED_VERSION_linux-stable = "5.15%"
+PREFERRED_VERSION_linux-stable = "6.1%"
