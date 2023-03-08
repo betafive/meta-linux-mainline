@@ -12,7 +12,7 @@ if sys.version_info < (3, 7):
     print("ERROR: This script requires Python 3.7 or later!")
     sys.exit(1)
 
-VMINOR_LIST = ((4, 14), (4, 19), (5, 4), (5, 10), (5, 15), (6, 0), (6, 1))
+VMINOR_LIST = ((4, 14), (4, 19), (5, 4), (5, 10), (5, 15), (6, 1))
 
 # Maps (vmajor, vminor) -> sha256
 SHA256_TARBALLS = {}
