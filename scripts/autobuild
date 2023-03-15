@@ -230,12 +230,11 @@ BUILDSETS = {
             "lts",
             "stable",
             "mainline",
-            "4.9",
             "4.14",
             "4.19",
             "5.4",
             "5.10",
-            "6.0",
+            "5.15",
         ),
     ),
     "riscv": BuildSet(
