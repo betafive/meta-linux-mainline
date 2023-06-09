@@ -212,10 +212,10 @@ BUILDSETS = {
             "raspberrypi4",
             "raspberrypi4-64",
         ),
-        kernels=("lts", "stable", "mainline", "5.10"),
+        kernels=("lts", "stable", "mainline", "5.10", "5.15"),
     ),
     "all": BuildSet(
-        releases=("dunfell", "kirkstone", "langdale", "master"),
+        releases=("dunfell", "kirkstone", "mickledore", "master"),
         machines=(
             "qemux86-64",
             "qemuarm64",
@@ -238,7 +238,7 @@ BUILDSETS = {
         ),
     ),
     "riscv": BuildSet(
-        releases=("kirkstone", "master"),
+        releases=("kirkstone", "mickledore", "master"),
         machines=(
             "qemuriscv64",
             "qemuriscv32",
@@ -247,12 +247,11 @@ BUILDSETS = {
             "lts",
             "stable",
             "mainline",
-            "5.10",
-            "6.0",
+            "5.15",
         ),
     ),
     "rpi": BuildSet(
-        releases=("dunfell", "kirkstone", "langdale", "master"),
+        releases=("dunfell", "kirkstone", "mickledore", "master"),
         machines=(
             "raspberrypi4",
             "raspberrypi4-64",
@@ -261,8 +260,7 @@ BUILDSETS = {
             "lts",
             "stable",
             "mainline",
-            "5.10",
-            "6.0",
+            "5.15",
         ),
     ),
 }
