@@ -1,0 +1,9 @@
+# Copyright (C) 2023, meta-linux-mainline contributors
+# SPDX-License-Identifier: MIT
+
+header:
+  version: 9
+
+local_conf_header:
+  kernel-version: |
+    require conf/linux-mainline/mainline.inc

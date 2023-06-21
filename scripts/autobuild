@@ -20,75 +20,54 @@ def pretty_timedelta(t):
     return f"{hours:02d}h {minutes:02d}m {seconds:02d}s"
 
 
-def fetch_one_layer(name, url):
-    gitdir = os.path.join("layers", f"{name}.git")
-    if os.path.exists(gitdir):
-        print(f"Updating {name}")
-        subprocess.run(["git", "-C", gitdir, "fetch", "-q"], check=True)
-    else:
-        print(f"Cloning {name}")
-        subprocess.run(["git", "clone", "-q", "--mirror", url, gitdir], check=True)
-
-
-def checkout_one_layer(name, workdir, release):
-    gitdir = os.path.join("layers", f"{name}.git")
-    checkoutdir = os.path.join(workdir, name)
-    print(f"Checking out {name} for {release}")
-    subprocess.run(
-        ["git", "clone", "-q", "--shared", "-b", release, gitdir, checkoutdir],
-        check=True,
-    )
-
-
 class Build:
-    def __init__(self, buildpath, release, machine, kernel):
-        self.workdir = os.path.join(buildpath, release)
+    def __init__(self, workdir, release, machine, kernel):
         self.release = release
         self.machine = machine
         self.kernel = kernel
-        self.builddir = os.path.join(self.workdir, f"build_{machine}_{kernel}")
+        self.workdir = workdir
+        self.builddir = os.path.join(self.workdir, "build")
+        self.logdir = os.path.join(self.workdir, "logs")
+        self.logpath = os.path.join(
+            self.logdir, f"build_{self.release}_{self.machine}_{self.kernel}.log"
+        )
+        self.dl_dir = os.path.join(self.workdir, "downloads")
+        self.sstate_dir = os.path.join(self.workdir, "sstate-cache")
 
-    def write_conf(self):
-        confdir = os.path.join(self.builddir, "conf")
-        os.makedirs(confdir)
-        if self.siteconf:
-            os.symlink(self.siteconf, os.path.join(confdir, "site.conf"))
-        with open(os.path.join(confdir, "auto.conf"), "w") as f:
-            f.write(f'MACHINE = "{self.machine}"\n')
-            f.write(f"require conf/linux-mainline/bsp/{self.machine}.inc\n")
-            if self.kernel not in ("lts", "stable", "mainline"):
-                f.write(f'PREFERRED_VERSION_linux-stable = "{self.kernel}%"\n')
-                f.write("require conf/linux-mainline/stable.inc\n")
-            else:
-                f.write(f"require conf/linux-mainline/{self.kernel}.inc\n")
-            f.write('INHERIT += "rm_work"\n')
-            f.write(f'DL_DIR = "{os.path.realpath("downloads")}"\n')
-            f.write(f'SSTATE_DIR = "{os.path.realpath("sstate-cache")}"\n')
-            if "raspberrypi" in self.machine:
-                f.write('LICENSE_FLAGS_ACCEPTED += "synaptics-killswitch"\n')
-        with open(os.path.join(confdir, "bblayers-auto.conf"), "w") as f:
-            f.write('BBLAYERS += " \\\n')
-            f.write(f"    {SOURCEPATH} \\\n")
-            if "raspberrypi" in self.machine:
-                f.write(f"    {os.path.join(self.workdir, 'meta-raspberrypi')} \\\n")
-            f.write('"\n')
+    def clean(self):
+        if os.path.exists(self.builddir):
+            subprocess.run(["rm", "-rf", self.builddir])
 
     def build(self):
-        pokydir = os.path.realpath(os.path.join(self.workdir, "poky"))
-        with open(os.path.join(self.builddir, "build.log"), "a") as f:
+        os.makedirs(self.logdir, exist_ok=True)
+        os.makedirs(self.dl_dir, exist_ok=True)
+        os.makedirs(self.sstate_dir, exist_ok=True)
+
+        kas_env = os.environ.copy()
+        kas_env["KAS_WORK_DIR"] = self.workdir
+        kas_env["KAS_BUILD_DIR"] = self.builddir
+        kas_env["DL_DIR"] = self.dl_dir
+        kas_env["SSTATE_DIR"] = self.sstate_dir
+
+        kas_configs = [
+            "build.yml",
+            f"kas/release-{self.release}.yml",
+            f"kas/machine-{self.machine}.yml",
+            f"kas/kernel-{self.kernel}.yml",
+        ]
+
+        with open(self.logpath, "w") as f:
             try:
                 subprocess.run(
                     [
-                        f"{SOURCEPATH}/scripts/autobuild-wrapper",
-                        pokydir,
-                        self.builddir,
-                        "bitbake",
-                        "-k",
-                        "core-image-base",
+                        "kas",
+                        "build",
+                        ":".join(kas_configs),
                     ],
                     check=True,
                     stdout=f,
                     stderr=f,
+                    env=kas_env,
                 )
             except subprocess.CalledProcessError:
                 traceback.print_exc(file=f)
@@ -96,18 +75,13 @@ class Build:
             return True
 
     def skip(self):
-        if "riscv" in self.machine and self.release == "dunfell":
-            return True
-        if (
-            ("raspberrypi4" in self.machine) or ("riscv" in self.machine)
-        ) and self.kernel not in (
-            "lts",
-            "stable",
-            "mainline",
-        ):
-            kernel_version = tuple([int(s) for s in self.kernel.split(".")])
-            if kernel_version < (5, 10):
+        if "riscv" in self.machine:
+            if self.release == "dunfell":
                 return True
+            if self.kernel not in ("lts", "stable", "mainline"):
+                kernel_version = tuple([int(s) for s in self.kernel.split(".")])
+                if kernel_version < (5, 10):
+                    return True
         return False
 
     def __call__(self, args):
@@ -122,7 +96,7 @@ class Build:
         else:
             t_start = datetime.datetime.now()
             self.siteconf = args.siteconf
-            self.write_conf()
+            self.clean()
             result = self.build()
             if result:
                 print("✔ ", end="", flush=True)
@@ -147,22 +121,7 @@ class BuildSet:
         for release in self.releases:
             for machine in self.machines:
                 for kernel in self.kernels:
-                    yield Build(self.buildpath, release, machine, kernel)
-
-    def fetch_layers(self):
-        os.makedirs("layers", exist_ok=True)
-        fetch_one_layer("poky", "https://git.yoctoproject.org/git/poky")
-        if any("raspberrypi" in s for s in self.machines):
-            fetch_one_layer(
-                "meta-raspberrypi", "https://github.com/agherzan/meta-raspberrypi.git"
-            )
-
-    def checkout_layers(self):
-        for release in self.releases:
-            workdir = os.path.join(self.buildpath, release)
-            checkout_one_layer("poky", workdir, release)
-            if any("raspberrypi" in s for s in self.machines):
-                checkout_one_layer("meta-raspberrypi", workdir, release)
+                    yield Build(self.workdir, release, machine, kernel)
 
     def build(self, args):
         count = len(self)
@@ -185,16 +144,14 @@ class BuildSet:
             return False
 
     def __call__(self, args):
-        self.buildpath = args.buildpath
-        self.fetch_layers()
-        self.checkout_layers()
+        self.workdir = args.workdir
         return self.build(args)
 
 
 BUILDSETS = {
     "default": BuildSet(
         releases=("kirkstone", "master"),
-        machines=("qemux86-64", "qemuriscv64", "raspberrypi4-64"),
+        machines=("qemux86-64", "qemuriscv64", "qemuarm64"),
         kernels=("lts", "stable", "mainline"),
     ),
     "quick": BuildSet(
@@ -209,8 +166,8 @@ BUILDSETS = {
             "qemuarm64",
             "qemuriscv64",
             "qemux86",
-            "raspberrypi4",
-            "raspberrypi4-64",
+            "qemuarm",
+            "qemuriscv32",
         ),
         kernels=("lts", "stable", "mainline", "5.10", "5.15"),
     ),
@@ -223,8 +180,6 @@ BUILDSETS = {
             "qemux86",
             "qemuarm",
             "qemuriscv32",
-            "raspberrypi4",
-            "raspberrypi4-64",
         ),
         kernels=(
             "lts",
@@ -250,19 +205,6 @@ BUILDSETS = {
             "5.15",
         ),
     ),
-    "rpi": BuildSet(
-        releases=("dunfell", "kirkstone", "mickledore", "master"),
-        machines=(
-            "raspberrypi4",
-            "raspberrypi4-64",
-        ),
-        kernels=(
-            "lts",
-            "stable",
-            "mainline",
-            "5.15",
-        ),
-    ),
 }
 
 
@@ -275,12 +217,11 @@ def main():
         "-b", "--buildset", default="default", help="Select the set of builds to run"
     )
     parser.add_argument("-s", "--siteconf", help="Path to a local site.conf file")
-    parser.add_argument("-p", "--buildpath", help="Path to build directory")
+    parser.add_argument(
+        "-w", "--workdir", default=os.getcwd(), help="Path to build directory"
+    )
     args = parser.parse_args()
-
-    if not args.buildpath:
-        timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-        args.buildpath = os.path.realpath(f"builds_{timestamp}")
+    args.workdir = os.path.realpath(args.workdir)
 
     buildset = BUILDSETS[args.buildset]
     if buildset(args):

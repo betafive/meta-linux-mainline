@@ -1,0 +1,11 @@
+# Copyright (C) 2023, meta-linux-mainline contributors
+# SPDX-License-Identifier: MIT
+
+header:
+  version: 9
+
+machine: qemuriscv64
+
+local_conf_header:
+  kernel-machine: |
+    require conf/linux-mainline/bsp/qemuriscv64.inc
