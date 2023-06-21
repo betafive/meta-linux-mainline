@@ -2,9 +2,8 @@
 # SPDX-License-Identifier: CC0-1.0
 
 /build
+/downloads
 /layers
-/test_logs
-.vscode
-.pytest_cache
-.python-version
-__pycache__
+/logs
+/sstate-cache
+/work
