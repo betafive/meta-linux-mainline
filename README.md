@@ -1,26 +1,26 @@
+# meta-linux-mainline
+
 <!--
 Copyright (C) 2021, meta-linux-mainline contributors
 SPDX-License-Identifier: CC-BY-4.0
 -->
-
-meta-linux-mainline
-===================
 
 A collection of Yocto Project recipes for the mainline and stable Linux
 kernel releases from kernel.org.
 
 <!--TOC-->
 
-- [Goals and non-goals of this layer](#goals-and-non-goals-of-this-layer)
-  - [Goals: things this layer is intentionally aiming to achieve](#goals-things-this-layer-is-intentionally-aiming-to-achieve)
-  - [Non-goals: things this layer is intentionally aiming *not* to achieve](#non-goals-things-this-layer-is-intentionally-aiming-not-to-achieve)
-- [Contents of this layer](#contents-of-this-layer)
-- [Using this layer](#using-this-layer)
-  - [As a dependency of a BSP layer](#as-a-dependency-of-a-bsp-layer)
-  - [Replacing your vendor kernel](#replacing-your-vendor-kernel)
-- [Contributing to this layer](#contributing-to-this-layer)
-- [Maintainers](#maintainers)
-- [License](#license)
+* [meta-linux-mainline](#meta-linux-mainline)
+  * [Goals and non-goals of this layer](#goals-and-non-goals-of-this-layer)
+    * [Goals: things this layer is intentionally aiming to achieve](#goals-things-this-layer-is-intentionally-aiming-to-achieve)
+    * [Non-goals: things this layer is intentionally aiming *not* to achieve](#non-goals-things-this-layer-is-intentionally-aiming-not-to-achieve)
+  * [Contents of this layer](#contents-of-this-layer)
+  * [Using this layer](#using-this-layer)
+    * [As a dependency of a BSP layer](#as-a-dependency-of-a-bsp-layer)
+    * [Replacing your vendor kernel](#replacing-your-vendor-kernel)
+  * [Contributing to this layer](#contributing-to-this-layer)
+  * [Maintainers](#maintainers)
+  * [License](#license)
 
 <!--TOC-->
 
@@ -36,7 +36,7 @@ kernel releases from kernel.org.
   well as the upstream master branch.
 
 * We provide examples of how to use this layer in the form of BSP configurations
-  for various QEMU and Raspberry Pi targets.
+  for various targets.
 
 ### Non-goals: things this layer is intentionally aiming *not* to achieve
 
@@ -129,15 +129,17 @@ vanilla kernel if it is not supported already by the relevant BSP layer. To
 use the appropriate `.inc` file, add the following line to your `local.conf`
 or distro conf file:
 
-    include conf/linux-mainline/bsp/${MACHINE}.inc
+```bitbake
+include conf/linux-mainline/bsp/${MACHINE}.inc
+```
 
 ## Contributing to this layer
 
-meta-linux-mainline is developed on [sourcehut](https://sr.ht/) at
-<https://sr.ht/~pbarker/meta-linux-mainline/>.
+meta-linux-mainline is developed on GitHub at
+<https://github.com/unnecessary-abstraction/meta-linux-mainline>.
 
-If you find any bugs or have a feature request feel free to open a ticket in
-the [issue tracker](https://todo.sr.ht/~pbarker/meta-linux-mainline).
+If you find any bugs or have a feature request feel free to open a ticket in the
+[issue tracker][].
 
 We welcome contributions to this layer, provided that they fit within the
 [goals and non-goals of this layer](#goals-and-non-goals-of-this-layer)
@@ -145,23 +147,12 @@ identified above. Each commit or patch must include a `Signed-off-by` line
 indicating acceptance of the [Developer's Certificate of Origin](DCO.txt) for it
 to be accepted into this layer.
 
-Please send patches and pull requests for this project to the maintainer's
-[public inbox](mailto:~pbarker/public-inbox@lists.sr.ht?subject=[meta-linux-mainline])
-with `[meta-linux-mainline]` in the subject line. Please use
-[plain text email](https://useplaintext.email/) when sending messages to this
-list. Submitted patches and other discussions may be found in the
-[archives](https://lists.sr.ht/~pbarker/public-inbox) of this mailing list.
+To submit patches to meta-linux-mainline please fork the repository on GitHub
+and open a [pull request][] where your changes are ready to merge. Pull requests
+should generally be targeted at the `main` branch.
 
-The following commands can be used to configure git to format patches
-appropriately:
-
-```
-git config format.to '~pbarker/public-inbox@lists.sr.ht'
-git config format.subjectPrefix 'meta-linux-mainline][PATCH'
-```
-
-Further instructions on how to set up git to send emails can be found at
-[git-send-email.io](https://git-send-email.io/).
+[issue tracker]:        https://github.com/unnecessary-abstraction/meta-linux-mainline/issues
+[pull request]:         https://github.com/unnecessary-abstraction/meta-linux-mainline/pulls
 
 ## Maintainers
 

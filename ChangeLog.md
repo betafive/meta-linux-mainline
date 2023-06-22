@@ -1,10 +1,9 @@
+# ChangeLog for meta-linux-mainline
+
 <!--
 Copyright (C) 2021, meta-linux-mainline contributors
 SPDX-License-Identifier: CC-BY-4.0
 -->
-
-ChangeLog for meta-linux-mainline
-=================================
 
 This ChangeLog documents high level changes which may affect users of this
 layer. Entries are grouped by the approximate date at which the changes were
@@ -16,8 +15,7 @@ the default LTS release series will be documented here.
 
 For a detailed list of all changes consult the git log.
 
-2021-08-05
-----------
+## 2021-08-05
 
 * Convert to the new override syntax required by the master branch of bitbake,
   openembedded-core & poky. Compatibility with all releases since dunfell should
@@ -38,8 +36,7 @@ For a detailed list of all changes consult the git log.
 
 * Extended the update-layer script to automatically commit changes.
 
-2021-06-18
-----------
+## 2021-06-18
 
 * Project reboot, simplifying maintenance by only focusing on a single `master`
   branch. This branch aims to support all currently maintained Yocto Project
@@ -64,8 +61,7 @@ For a detailed list of all changes consult the git log.
 * New `scripts/autobuild` script to automate testing this layer. This replaces
   the kas build configurations and pytest test cases previously used.
 
-dunfell-r1 (2020-05-26)
------------------------
+## dunfell-r1 (2020-05-26)
 
 Initial release for the Yocto Project `dunfell` branch.
 
