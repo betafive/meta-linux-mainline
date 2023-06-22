@@ -18,10 +18,10 @@ repos:
     rev: 6.0.0
     hooks:
     -   id: flake8
--   repo: https://github.com/markdownlint/markdownlint
-    rev: v0.12.0
+-   repo: https://github.com/jackdewinter/pymarkdown
+    rev: d4268139457f7e21b763572a80ea85844a0ed9f5
     hooks:
-    -   id: markdownlint
+    -   id: pymarkdown
 -   repo: https://github.com/shellcheck-py/shellcheck-py
     rev: v0.9.0.5
     hooks:
@@ -30,6 +30,7 @@ repos:
     rev: 8.1.9
     hooks:
     -   id: md-toc
+        args: ["github", "-u", "*"]
 -   repo: https://github.com/pycqa/isort
     rev: 5.12.0
     hooks:
