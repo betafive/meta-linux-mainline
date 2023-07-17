@@ -15,6 +15,54 @@ the default LTS release series will be documented here.
 
 For a detailed list of all changes consult the git log.
 
+## 2023-06
+
+* Overhaul autobuild infrastructure - we're now using kas to handle each build
+  to make it easier to run single builds and to debug build failures.
+
+* Drop compatibility with obsolete non-LTS Yocto Project branches (gatesgarth,
+  hardknott, honister & langdale). These are no longer part of our test matrix
+  anyway so advertising compatibility isn't wise.
+
+* Tidy up documentation and point at the project's current GitHub repository in
+  the contribution instructions.
+
+## 2023-03
+
+* Drop Linux 4.9 LTS series as it has reached EOL.
+
+* Switch LTS branch to Linux 6.1.
+
+* Mark this layer as compatible with the Yocto Project mickledore branch.
+
+## 2022-12
+
+* Mark this layer as compatible with the Yocto Project langdale branch.
+
+* Add configs for qemu RISC-V machines.
+
+* Use GitHub Actions to automatically update the Yocto Project release tracking
+  branches (i.e. dunfell, kirkstone, etc) when changes are pushed to the main
+  branch.
+
+## 2022-02
+
+* Drop Linux 4.4 LTS series as it has reached EOL.
+
+* Mark this layer as compatible with the Yocto Project kirkstone LTS branch.
+
+* Moved the project to GitHub. Sourcehut was nice, but it's easier for new folks
+  to contribute to the project via GitHub.
+
+## 2022-01
+
+* Dropped support for old overrides syntax.
+
+* Carry a recipe for python3-dtschema-wrapper so we can build Linux 5.16 or
+  later on the Yocto Project dunfell branch.
+
+* Switch LTS branch to Linux 5.15.
+
 ## 2021-08-05
 
 * Convert to the new override syntax required by the master branch of bitbake,
