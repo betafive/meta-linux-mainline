@@ -1,7 +1,5 @@
 # Copyright (C) 2021, meta-linux-mainline contributors (auto-generated file)
 # SPDX-License-Identifier: CC0-1.0
-LINUX_VERSION = "6.4-rc7"
-SRCREV = "45a3e24f65e90a047bef86f927ebdc4c710edaa1"
+LINUX_VERSION = "6.5-rc2"
+SRCREV = "fdf0eaf11452d72945af31804e2a1048ee1b574c"
 require linux-mainline.inc
-
-SRC_URI += "file://20230117_arnd_workqueue_fix_enum_type_for_gcc_13.patch"
