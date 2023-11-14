@@ -172,7 +172,7 @@ BUILDSETS = {
         kernels=("lts", "stable", "mainline", "5.10", "5.15"),
     ),
     "all": BuildSet(
-        releases=("dunfell", "kirkstone", "mickledore", "master"),
+        releases=("dunfell", "kirkstone", "nanbield", "master"),
         machines=(
             "qemux86-64",
             "qemuarm64",
@@ -193,7 +193,7 @@ BUILDSETS = {
         ),
     ),
     "riscv": BuildSet(
-        releases=("kirkstone", "mickledore", "master"),
+        releases=("kirkstone", "nanbield", "master"),
         machines=(
             "qemuriscv64",
             "qemuriscv32",
