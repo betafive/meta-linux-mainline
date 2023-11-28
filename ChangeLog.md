@@ -15,6 +15,16 @@ the default LTS release series will be documented here.
 
 For a detailed list of all changes consult the git log.
 
+## 2023-11
+
+* Add support for Yocto Project 4.3 "Nanbield" release series.
+
+* Add kas configs for building v6.1.x and v6.6.x series kernels.
+
+* Switch LTS branch to v6.6.x series.
+
+* Update repository URL to <https://github.com/betafive/meta-linux-mainline>.
+
 ## 2023-06
 
 * Overhaul autobuild infrastructure - we're now using kas to handle each build
