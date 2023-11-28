@@ -169,7 +169,7 @@ BUILDSETS = {
             "qemuarm",
             "qemuriscv32",
         ),
-        kernels=("5.10", "5.15", "lts", "stable", "mainline"),
+        kernels=("5.10", "6.1", "lts", "stable", "mainline"),
     ),
     "all": BuildSet(
         releases=("dunfell", "kirkstone", "nanbield", "master"),
@@ -187,6 +187,7 @@ BUILDSETS = {
             "5.4",
             "5.10",
             "5.15",
+            "6.1",
             "lts",
             "stable",
             "mainline",
@@ -199,7 +200,7 @@ BUILDSETS = {
             "qemuriscv32",
         ),
         kernels=(
-            "5.15",
+            "6.1",
             "lts",
             "stable",
             "mainline",
