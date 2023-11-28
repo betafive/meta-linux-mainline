@@ -136,7 +136,7 @@ include conf/linux-mainline/bsp/${MACHINE}.inc
 ## Contributing to this layer
 
 meta-linux-mainline is developed on GitHub at
-<https://github.com/unnecessary-abstraction/meta-linux-mainline>.
+<https://github.com/betafive/meta-linux-mainline>.
 
 If you find any bugs or have a feature request feel free to open a ticket in the
 [issue tracker][].
@@ -151,8 +151,8 @@ To submit patches to meta-linux-mainline please fork the repository on GitHub
 and open a [pull request][] where your changes are ready to merge. Pull requests
 should generally be targeted at the `main` branch.
 
-[issue tracker]:        https://github.com/unnecessary-abstraction/meta-linux-mainline/issues
-[pull request]:         https://github.com/unnecessary-abstraction/meta-linux-mainline/pulls
+[issue tracker]:        https://github.com/betafive/meta-linux-mainline/issues
+[pull request]:         https://github.com/betafive/meta-linux-mainline/pulls
 
 ## Maintainers
 
