@@ -2,8 +2,8 @@
 # SPDX-License-Identifier: MIT
 
 header:
-  version: 9
+  version: 14
 
-repos:
-  poky:
-    refspec: mickledore
+defaults:
+  repos:
+    branch: mickledore
