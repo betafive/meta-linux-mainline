@@ -15,7 +15,7 @@ the default LTS release series will be documented here.
 
 For a detailed list of all changes consult the git log.
 
-## 2024-12
+## 2023-12
 
 * Updated kas configuration format to v14, using the new `branch` property
   instead of the obsolete `refspec` property.
@@ -39,6 +39,8 @@ For a detailed list of all changes consult the git log.
 
 * Overhaul autobuild infrastructure - we're now using kas to handle each build
   to make it easier to run single builds and to debug build failures.
+
+* Dropped raspberrypi4 builds from the autobuild matrix.
 
 * Drop compatibility with obsolete non-LTS Yocto Project branches (gatesgarth,
   hardknott, honister & langdale). These are no longer part of our test matrix
