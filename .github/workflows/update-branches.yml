@@ -15,4 +15,4 @@ jobs:
       - run: git push --force origin HEAD:master
       - run: git push --force origin HEAD:dunfell
       - run: git push --force origin HEAD:kirkstone
-      - run: git push --force origin HEAD:mickledore
+      - run: git push --force origin HEAD:nanbield
