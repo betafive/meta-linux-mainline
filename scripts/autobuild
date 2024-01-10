@@ -7,7 +7,6 @@ import datetime
 import os
 import subprocess
 import sys
-import traceback
 
 SOURCEPATH = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 
@@ -21,30 +20,47 @@ def pretty_timedelta(t):
 
 
 class Build:
-    def __init__(self, workdir, release, machine, kernel):
+    def __init__(self, buildset, release, machine, kernel):
         self.release = release
         self.machine = machine
         self.kernel = kernel
-        self.workdir = workdir
-        self.builddir = os.path.join(self.workdir, "build")
-        self.logdir = os.path.join(self.workdir, "logs")
+        self.buildset = buildset
+        self.builddir = os.path.join(buildset.workdir, "build")
+        self.confdir = os.path.join(self.builddir, "conf")
         self.logpath = os.path.join(
-            self.logdir, f"build_{self.release}_{self.machine}_{self.kernel}.log"
+            buildset.logdir, f"build_{self.release}_{self.machine}_{self.kernel}.log"
         )
-        self.dl_dir = os.path.join(self.workdir, "downloads")
-        self.sstate_dir = os.path.join(self.workdir, "sstate-cache")
+        self.dl_dir = os.path.join(buildset.workdir, "downloads")
+        self.sstate_dir = os.path.join(buildset.workdir, "sstate-cache")
 
-    def clean(self):
-        if os.path.exists(self.builddir):
-            subprocess.run(["rm", "-rf", self.builddir])
-
-    def build(self):
-        os.makedirs(self.logdir, exist_ok=True)
         os.makedirs(self.dl_dir, exist_ok=True)
         os.makedirs(self.sstate_dir, exist_ok=True)
 
+    def skip(self):
+        if "riscv" in self.machine:
+            if self.release == "dunfell":
+                return True
+            if self.kernel not in ("lts", "stable", "mainline"):
+                kernel_version = tuple([int(s) for s in self.kernel.split(".")])
+                if kernel_version < (5, 10):
+                    return True
+        return False
+
+    def build(self):
+        self.buildset.msg(
+            f"R={self.release} M={self.machine} K={self.kernel}".ljust(64)
+        )
+        if self.skip():
+            self.buildset.msg("  skipped\n")
+            return True
+
+        t_start = datetime.datetime.now()
+        if os.path.exists(self.builddir):
+            subprocess.run(["rm", "-rf", self.builddir])
+        os.makedirs(self.confdir)
+        os.symlink(self.buildset.siteconf, os.path.join(self.confdir, "site.conf"))
         kas_env = os.environ.copy()
-        kas_env["KAS_WORK_DIR"] = self.workdir
+        kas_env["KAS_WORK_DIR"] = self.buildset.workdir
         kas_env["KAS_BUILD_DIR"] = self.builddir
         kas_env["DL_DIR"] = self.dl_dir
         kas_env["SSTATE_DIR"] = self.sstate_dir
@@ -57,55 +73,24 @@ class Build:
         ]
 
         with open(self.logpath, "w") as f:
-            try:
-                subprocess.run(
-                    [
-                        "kas",
-                        "build",
-                        ":".join(kas_configs),
-                    ],
-                    check=True,
-                    stdout=f,
-                    stderr=f,
-                    env=kas_env,
-                )
-            except subprocess.CalledProcessError:
-                traceback.print_exc(file=f)
-                return False
-            return True
-
-    def skip(self):
-        if "riscv" in self.machine:
-            if self.release == "dunfell":
-                return True
-            if self.kernel not in ("lts", "stable", "mainline"):
-                kernel_version = tuple([int(s) for s in self.kernel.split(".")])
-                if kernel_version < (5, 10):
-                    return True
-        return False
-
-    def __call__(self, args):
-        print(
-            f"R={self.release} M={self.machine} K={self.kernel}".ljust(64),
-            end="",
-            flush=True,
-        )
-        if self.skip():
-            print("  skipped", flush=True)
-            result = True
+            rc = subprocess.run(
+                [
+                    "kas",
+                    "build",
+                    ":".join(kas_configs),
+                ],
+                stdout=f,
+                stderr=f,
+                env=kas_env,
+            ).returncode
+        if rc == 0:
+            self.buildset.msg("  success ")
         else:
-            t_start = datetime.datetime.now()
-            self.siteconf = args.siteconf
-            self.clean()
-            result = self.build()
-            if result:
-                print("✔ ", end="", flush=True)
-            else:
-                print("✖ ", end="", flush=True)
-            t_stop = datetime.datetime.now()
-            t_build = t_stop - t_start
-            print(f"in {pretty_timedelta(t_build)}", flush=True)
-        return result
+            self.buildset.msg("  failure ")
+        t_stop = datetime.datetime.now()
+        t_build = t_stop - t_start
+        self.buildset.msg(f"in {pretty_timedelta(t_build)}\n")
+        return rc == 0
 
 
 class BuildSet:
@@ -121,31 +106,36 @@ class BuildSet:
         for release in self.releases:
             for machine in self.machines:
                 for kernel in self.kernels:
-                    yield Build(self.workdir, release, machine, kernel)
+                    yield Build(self, release, machine, kernel)
 
-    def build(self, args):
+    def msg(self, msg):
+        self.logfile.write(msg)
+        print(msg, end="", flush=True)
+
+    def prepare(self, args):
+        self.workdir = args.workdir
+        self.siteconf = args.siteconf
+        self.logdir = os.path.join(self.workdir, "logs")
+        os.makedirs(self.logdir, exist_ok=True)
+
+        self.logpath = os.path.join(self.logdir, "build.log")
+        self.logfile = open(self.logpath, "w")
+
+    def build(self):
         count = len(self)
         had_error = False
-        print(f"Running {count} builds...")
+        self.msg(f"Running {count} builds...\n")
         for i, build in enumerate(self):
-            print(
-                f"[{i+1:03d}/{count:03d}] ",
-                end="",
-                flush=True,
-            )
-            if not build(args):
+            self.msg(f"[{i+1:03d}/{count:03d}] ")
+            if not build.build():
                 had_error = True
 
         if not had_error:
-            print("All succeeded.")
+            self.msg("All succeeded.\n")
             return True
         else:
-            print("Failed!")
+            self.msg("Failed!\n")
             return False
-
-    def __call__(self, args):
-        self.workdir = args.workdir
-        return self.build(args)
 
 
 BUILDSETS = {
@@ -225,7 +215,8 @@ def main():
     args.workdir = os.path.realpath(args.workdir)
 
     buildset = BUILDSETS[args.buildset]
-    if buildset(args):
+    buildset.prepare(args)
+    if buildset.build():
         sys.exit(0)
     else:
         sys.exit(1)
