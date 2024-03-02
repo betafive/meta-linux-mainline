@@ -29,8 +29,4 @@ python __anonymous() {
         d.setVar("LIC_FILES_CHKSUM", "file://COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7")
     elif kver <= (5, 5):
         d.setVar("LIC_FILES_CHKSUM", "file://COPYING;md5=bbea815ee2795b2f4230826c0c6b8814")
-
-    # Handle broken build in 4.14 if CONFIG_UNWINDER_ORC=y
-    if kver == (4, 14):
-        d.appendVar("SRC_URI", " file://4.14_0001-x86_64_defconfig-Switch-to-Frame-pointer-unwinder.patch")
 }
