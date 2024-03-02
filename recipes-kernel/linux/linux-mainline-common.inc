@@ -7,7 +7,6 @@ LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://COPYING;md5=6bc538ed5bd9a7fc9398086aedcd7e46"
 
 inherit kernel
-inherit kernel-yocto
 
 # The ORC unwinder is enabled in x86_64_defconfig and needs libelf-dev
 DEPENDS:append:x86-64 = " elfutils-native"
@@ -30,3 +29,5 @@ SRC_URI:append:qemuall = " file://virtio-blk.cfg"
 
 # Enable LPAE support for 32-bit raspberrypi4
 SRC_URI:append:raspberrypi4 = " file://rpi4-lpae.cfg"
+
+KERNEL_CONFIG_COMMAND = "oe_runmake -C ${S} O=${B} ${KBUILD_DEFCONFIG}"
