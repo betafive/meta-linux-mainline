@@ -182,6 +182,18 @@ BUILDSETS = {
             "mainline",
         ),
     ),
+    "mainline": BuildSet(
+        releases=("dunfell", "kirkstone", "nanbield", "master"),
+        machines=(
+            "qemux86-64",
+            "qemuarm64",
+            "qemuriscv64",
+            "qemux86",
+            "qemuarm",
+            "qemuriscv32",
+        ),
+        kernels=("mainline",),
+    ),
     "riscv": BuildSet(
         releases=("kirkstone", "nanbield", "master"),
         machines=(
