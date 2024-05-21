@@ -13,6 +13,5 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - run: git push --force origin HEAD:master
-      - run: git push --force origin HEAD:dunfell
       - run: git push --force origin HEAD:kirkstone
       - run: git push --force origin HEAD:nanbield
