@@ -38,8 +38,6 @@ class Build:
 
     def skip(self):
         if "riscv" in self.machine:
-            if self.release == "dunfell":
-                return True
             if self.kernel not in ("lts", "stable", "mainline"):
                 kernel_version = tuple([int(s) for s in self.kernel.split(".")])
                 if kernel_version < (5, 10):
@@ -150,7 +148,7 @@ BUILDSETS = {
         kernels=("lts", "stable", "mainline"),
     ),
     "extended": BuildSet(
-        releases=("dunfell", "kirkstone", "master"),
+        releases=("kirkstone", "master"),
         machines=(
             "qemux86-64",
             "qemuarm64",
@@ -162,7 +160,7 @@ BUILDSETS = {
         kernels=("5.10", "6.1", "lts", "stable", "mainline"),
     ),
     "all": BuildSet(
-        releases=("dunfell", "kirkstone", "nanbield", "master"),
+        releases=("kirkstone", "nanbield", "master"),
         machines=(
             "qemux86-64",
             "qemuarm64",
@@ -183,7 +181,7 @@ BUILDSETS = {
         ),
     ),
     "mainline": BuildSet(
-        releases=("dunfell", "kirkstone", "nanbield", "master"),
+        releases=("kirkstone", "nanbield", "master"),
         machines=(
             "qemux86-64",
             "qemuarm64",
