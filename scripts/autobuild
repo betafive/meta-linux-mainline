@@ -81,13 +81,12 @@ class Build:
                 stderr=f,
                 env=kas_env,
             ).returncode
-        if rc == 0:
-            self.buildset.msg("  success ")
-        else:
-            self.buildset.msg("  failure ")
         t_stop = datetime.datetime.now()
         t_build = t_stop - t_start
-        self.buildset.msg(f"in {pretty_timedelta(t_build)}\n")
+        if rc == 0:
+            self.buildset.msg(f"  success in {pretty_timedelta(t_build)}\n")
+        else:
+            self.buildset.msg(f"  failure in {pretty_timedelta(t_build)} !!\n")
         return rc == 0
 
 
