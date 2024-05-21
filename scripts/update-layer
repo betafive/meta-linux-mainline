@@ -73,7 +73,7 @@ def update_stable_recipe(vmajor, vminor):
         open(fname, "w").write(
             textwrap.dedent(
                 f"""\
-                # Copyright (C) 2021, meta-linux-mainline contributors (auto-generated file)
+                # Copyright meta-linux-mainline contributors (auto-generated file)
                 # SPDX-License-Identifier: CC0-1.0
                 LINUX_VMAJOR = "{vmajor}"
                 LINUX_VMINOR = "{vminor}"
@@ -139,7 +139,7 @@ def update_mainline_recipe():
         open("recipes-kernel/linux/linux-mainline.bb", "w").write(
             textwrap.dedent(
                 f"""\
-                # Copyright (C) 2021, meta-linux-mainline contributors (auto-generated file)
+                # Copyright meta-linux-mainline contributors (auto-generated file)
                 # SPDX-License-Identifier: CC0-1.0
                 LINUX_VERSION = "{version}"
                 SRCREV = "{latest_srcrev}"
