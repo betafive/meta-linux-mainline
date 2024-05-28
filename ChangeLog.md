@@ -15,6 +15,31 @@ the default LTS release series will be documented here.
 
 For a detailed list of all changes consult the git log.
 
+## 2024-05
+
+* Dropped support for Yocto Project 3.1 "dunfell" LTS branch.
+
+* Added support for Yocto Project 5.0 "scarthgap" LTS branch.
+
+## 2024-03
+
+* Dropped obsolete 4.14 kernel series.
+
+* Use `KBUILD_DEFCONFIG` as a make target instead of looking for a defconfig
+  file to copy. This is required so that we can build for 32-bit RISC-V targets
+  with the latest kernel releases. This requires dropping the kernel-yocto
+  bbclass from our kernel recipes.
+
+* Set `OLDEST_KERNEL` for automated builds to ensure that glibc is configured to
+  support all kernel versions in this layer. Users of this layer will need to
+  set `OLDEST_KERNEL` in their local or distro configuration files if they are
+  using a kernel series older than 5.15.
+
+## 2024-01
+
+* Refactored autobuild script, with improved logging and fixed support for
+  site.conf files.
+
 ## 2023-12
 
 * Updated kas configuration format to v14, using the new `branch` property
