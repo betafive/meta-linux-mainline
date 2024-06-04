@@ -65,10 +65,9 @@ This layer currently contains the following kernel recipes:
   currently supported release series can be seen at
   [kernel.org](https://www.kernel.org/).
 
-* `linux-mainline`: This recipe uses AUTOREV to pull the latest commit to the
-  master branch of the mainline Linux repository. As this branch includes
-  release candidate (rc) kernels it is only recommended for testing and active
-  development.
+* `linux-mainline`: This recipe follows the release candidates (vX.Y-rcZ) and
+  releases (vX.Y) on Linus' mainline branch. As this branch includes release
+  candidate kernels it is only recommended for testing and active development.
 
 ## Using this layer
 
