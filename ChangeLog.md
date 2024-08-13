@@ -23,8 +23,6 @@ For a detailed list of all changes consult the git log.
 * Updated SPDX license name in the kernel recipes, it is now `GPL-2.0-only` as
   `GPLv2` is obsolete.
 
-* Drop support for Yocto Project 4.2 "Mickledore" release series.
-
 ## 2023-11
 
 * Add support for Yocto Project 4.3 "Nanbield" release series.
