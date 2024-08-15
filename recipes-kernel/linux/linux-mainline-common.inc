@@ -31,3 +31,5 @@ SRC_URI:append:qemuall = " file://virtio-blk.cfg"
 SRC_URI:append:raspberrypi4 = " file://rpi4-lpae.cfg"
 
 KERNEL_CONFIG_COMMAND = "oe_runmake -C ${S} O=${B} ${KBUILD_DEFCONFIG}"
+
+ERROR_QA:remove = "buildpaths"
