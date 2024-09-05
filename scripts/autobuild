@@ -148,7 +148,7 @@ BUILDSETS = {
         kernels=("5.10", "5.15", "6.1", "lts", "stable", "mainline"),
     ),
     "rpi": BuildSet(
-        releases=("kirkstone", "nanbield", "master"),
+        releases=("kirkstone", "nanbield", "scarthgap", "master"),
         machines=("raspberrypi4", "raspberrypi4-64"),
         kernels=("5.10", "5.15", "6.1", "lts", "stable", "mainline"),
     ),
