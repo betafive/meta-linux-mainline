@@ -159,7 +159,7 @@ def update_recipes():
             continue
         release_type = line.split()[2]
         version = line.split(":")[1].replace("(EOL)", "").strip()
-        if release_type == "mainline":
+        if release_type == "mainline" and not mainline_version:
             mainline_version = version
         if release_type in ("stable", "longterm"):
             stable_versions.add(version)
