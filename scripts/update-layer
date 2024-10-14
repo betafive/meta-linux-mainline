@@ -60,7 +60,7 @@ def update_mainline_recipe(version):
                 "ls-remote",
                 "--tags",
                 "https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git",
-                f"v{version}",
+                f"v{version}^{{}}",
             ],
             capture_output=True,
             check=True,
