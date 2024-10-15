@@ -4,16 +4,12 @@
 require linux-mainline-common.inc
 SUMMARY += "(stable)"
 
+LINUX_STABLE_BRANCH = "linux-${LINUX_VMAJOR}.${LINUX_VMINOR}.y"
 LINUX_VERSION = "${LINUX_VMAJOR}.${LINUX_VMINOR}.${LINUX_VPATCH}"
 PV = "${LINUX_VERSION}"
 
-SRC_URI = " \
-    https://cdn.kernel.org/pub/linux/kernel/v${LINUX_VMAJOR}.x/linux-${LINUX_VMAJOR}.${LINUX_VMINOR}.tar.xz;name=tarball \
-    https://cdn.kernel.org/pub/linux/kernel/v${LINUX_VMAJOR}.x/patch-${LINUX_VMAJOR}.${LINUX_VMINOR}.${LINUX_VPATCH}.xz;downloadfilename=linux-${LINUX_VMAJOR}.${LINUX_VMINOR}.${LINUX_VPATCH}.patch.xz;name=patch \
-    "
-SRC_URI[tarball.sha256sum] = "${LINUX_SHA256_TARBALL}"
-SRC_URI[patch.sha256sum] = "${LINUX_SHA256_PATCH}"
-S = "${WORKDIR}/linux-${LINUX_VMAJOR}.${LINUX_VMINOR}"
+SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git;protocol=https;branch=${LINUX_STABLE_BRANCH}"
+S = "${WORKDIR}/git"
 
 python __anonymous() {
     kver = (int(d.getVar("LINUX_VMAJOR")), int(d.getVar("LINUX_VMINOR")))

@@ -8,43 +8,27 @@ if sys.version_info < (3, 7):
     print("ERROR: This script requires Python 3.7 or later!")
     sys.exit(1)
 
-import os
 import re
-import shutil
 import subprocess
-import tempfile
 import textwrap
 import urllib.request
 
-TMPDIR = tempfile.TemporaryDirectory()
 
-
-def load_sha256sums(vmajor, vminor, vpatch):
-    path = os.path.join(TMPDIR.name, f"sha256sums-v{vmajor}.asc")
-    if not os.path.exists(path):
-        f_in = urllib.request.urlopen(
-            f"https://cdn.kernel.org/pub/linux/kernel/v{vmajor}.x/sha256sums.asc"
-        )
-        f_out = open(path, "wb")
-        shutil.copyfileobj(f_in, f_out)
-        f_in.close()
-        f_out.close()
-
-    tarball_sha256sum = None
-    patch_sha256sum = None
-    tarball_pattern = re.compile(rf"([0-9a-f]*)\s+linux-{vmajor}.{vminor}.tar.xz")
-    patch_pattern = re.compile(rf"([0-9a-f]*)\s+patch-{vmajor}.{vminor}.{vpatch}.xz")
-    for line in open(path, "r"):
-        line = line.strip()
-        m = re.match(tarball_pattern, line)
-        if m:
-            tarball_sha256sum = m.group(1)
-            continue
-        m = re.match(patch_pattern, line)
-        if m:
-            patch_sha256sum = m.group(1)
-
-    return tarball_sha256sum, patch_sha256sum
+def get_srcrev(version, upstream):
+    p = subprocess.run(
+        [
+            "git",
+            "ls-remote",
+            "--tags",
+            f"https://git.kernel.org/pub/scm/linux/kernel/git/{upstream}/linux.git",
+            f"v{version}^{{}}",
+        ],
+        capture_output=True,
+        check=True,
+    )
+    srcrev = p.stdout.decode().split()[0]
+    # print(f"Got srcrev {srcrev} for version {version}")
+    return srcrev
 
 
 def update_mainline_recipe(version):
@@ -53,20 +37,7 @@ def update_mainline_recipe(version):
 
     print(f"mainline: {old_version} -> {version}")
     if old_version != version:
-        # Get the srcrev
-        p = subprocess.run(
-            [
-                "git",
-                "ls-remote",
-                "--tags",
-                "https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git",
-                f"v{version}^{{}}",
-            ],
-            capture_output=True,
-            check=True,
-        )
-        srcrev = p.stdout.decode().split()[0]
-        # print(f"mainline: Got srcrev {srcrev}")
+        srcrev = get_srcrev(version, "torvalds")
 
         # Write the new recipe
         open("recipes-kernel/linux/linux-mainline.bb", "w").write(
@@ -109,13 +80,9 @@ def update_stable_recipe(version):
         f"{vmajor}.{vminor}.y: {vmajor}.{vminor}.{old_vpatch} -> {vmajor}.{vminor}.{vpatch}"
     )
     if old_vpatch != vpatch:
-        sha256_tarball, sha256_patch = load_sha256sums(vmajor, vminor, vpatch)
-        if not sha256_tarball or not sha256_patch:
-            print(f"Failed to get sha256sums for {version}")
-            return
+        srcrev = get_srcrev(version, "stable")
 
-        # print(f"{vmajor}.{vminor}.y: Got tarball sha256sum {sha256_tarball}")
-        # print(f"{vmajor}.{vminor}.y: Got patch sha256sum {sha256_patch}")
+        # Write the new recipe
         open(fname, "w").write(
             textwrap.dedent(
                 f"""\
@@ -124,8 +91,7 @@ def update_stable_recipe(version):
                 LINUX_VMAJOR = "{vmajor}"
                 LINUX_VMINOR = "{vminor}"
                 LINUX_VPATCH = "{vpatch}"
-                LINUX_SHA256_TARBALL = "{sha256_tarball}"
-                LINUX_SHA256_PATCH = "{sha256_patch}"
+                SRCREV = "{srcrev}"
                 require linux-stable.inc
                 """
             )
@@ -133,8 +99,6 @@ def update_stable_recipe(version):
 
         if old_vpatch:
             msg = f"linux-stable: Uprev {vmajor}.{vminor} recipe to v{vmajor}.{vminor}.{vpatch}"
-        elif not vpatch:
-            msg = f"linux-stable: Add {vmajor}.{vminor} recipe"
         else:
             msg = f"linux-stable: Add {vmajor}.{vminor} recipe at v{vmajor}.{vminor}.{vpatch}"
         subprocess.run(
