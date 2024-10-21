@@ -139,12 +139,12 @@ BUILDSETS = {
     # Core sets
     "default": BuildSet(
         releases=("kirkstone", "scarthgap", "master"),
-        machines=("qemux86-64", "qemuarm64", "qemux86", "qemuarm"),
+        machines=("qemux86-64", "qemuarm64", "qemuriscv64", "qemux86", "qemuarm"),
         kernels=("4.19", "5.4", "5.10", "5.15", "6.1", "lts", "stable", "mainline"),
     ),
-    "riscv": BuildSet(
+    "rv32": BuildSet(
         releases=("kirkstone", "scarthgap", "master"),
-        machines=("qemuriscv64", "qemuriscv32"),
+        machines=("qemuriscv32",),
         kernels=("5.10", "5.15", "6.1", "lts", "stable", "mainline"),
     ),
     "rpi": BuildSet(
