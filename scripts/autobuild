@@ -138,17 +138,17 @@ class BuildSet:
 BUILDSETS = {
     # Core sets
     "default": BuildSet(
-        releases=("kirkstone", "scarthgap", "master"),
+        releases=("kirkstone", "scarthgap", "styhead", "master"),
         machines=("qemux86-64", "qemuarm64", "qemuriscv64", "qemux86", "qemuarm"),
         kernels=("4.19", "5.4", "5.10", "5.15", "6.1", "lts", "stable", "mainline"),
     ),
     "rv32": BuildSet(
-        releases=("kirkstone", "scarthgap", "master"),
+        releases=("kirkstone", "scarthgap", "styhead", "master"),
         machines=("qemuriscv32",),
         kernels=("5.10", "5.15", "6.1", "lts", "stable", "mainline"),
     ),
     "rpi": BuildSet(
-        releases=("kirkstone", "scarthgap", "master"),
+        releases=("kirkstone", "scarthgap", "styhead", "master"),
         machines=("raspberrypi4", "raspberrypi4-64"),
         kernels=("5.10", "5.15", "6.1", "lts", "stable", "mainline"),
     ),
