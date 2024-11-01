@@ -3,6 +3,9 @@
 
 require conf/linux-mainline/bsp/rpi-common.inc
 
+LINUX_MINIMUM_VMAJOR = "5"
+LINUX_MINIMUM_VMINOR = "10"
+
 KERNEL_DEVICETREE = "broadcom/bcm2711-rpi-4-b.dtb"
 KBUILD_DEFCONFIG = "multi_v7_defconfig"
 
