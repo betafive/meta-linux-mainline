@@ -2,4 +2,3 @@
 # SPDX-License-Identifier: MIT
 
 KBUILD_DEFCONFIG = "multi_v7_defconfig"
-KCONFIG_MODE = "alldefconfig"

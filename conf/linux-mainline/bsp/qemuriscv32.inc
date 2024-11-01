@@ -5,4 +5,3 @@ LINUX_MINIMUM_VMAJOR = "5"
 LINUX_MINIMUM_VMINOR = "10"
 
 KBUILD_DEFCONFIG = "rv32_defconfig"
-KCONFIG_MODE = "alldefconfig"

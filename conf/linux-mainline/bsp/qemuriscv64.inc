@@ -3,6 +3,3 @@
 
 LINUX_MINIMUM_VMAJOR = "5"
 LINUX_MINIMUM_VMINOR = "10"
-
-KBUILD_DEFCONFIG = "defconfig"
-KCONFIG_MODE = "alldefconfig"

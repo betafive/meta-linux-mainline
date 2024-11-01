@@ -8,6 +8,9 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=6bc538ed5bd9a7fc9398086aedcd7e46"
 
 inherit kernel kernel-yocto
 
+KCONFIG_MODE ?= "alldefconfig"
+KBUILD_DEFCONFIG ?= "defconfig"
+
 DEPENDS += "xz-native bc-native"
 
 # The ORC unwinder is enabled in x86_64_defconfig and needs libelf-dev
