@@ -11,6 +11,8 @@ inherit kernel kernel-yocto
 KCONFIG_MODE ?= "alldefconfig"
 KBUILD_DEFCONFIG ?= "defconfig"
 
+KERNEL_EXTRA_SRC_URI ?= ""
+SRC_URI:append = " ${KERNEL_EXTRA_SRC_URI}"
 DEPENDS += "xz-native bc-native"
 
 # The ORC unwinder is enabled in x86_64_defconfig and needs libelf-dev
@@ -22,8 +24,5 @@ KERNEL_LD:append:aarch64 = " ${TOOLCHAIN_OPTIONS}"
 
 # Ensure virtio block devices are supported for qemu targets
 SRC_URI:append:qemuall = " file://virtio-blk.cfg"
-
-# Enable LPAE support for 32-bit raspberrypi4
-SRC_URI:append:raspberrypi4 = " file://rpi4-lpae.cfg"
 
 ERROR_QA:remove = "buildpaths"
