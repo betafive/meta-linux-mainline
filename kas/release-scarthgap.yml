@@ -7,3 +7,7 @@ header:
 defaults:
   repos:
     branch: scarthgap
+
+local_conf_header:
+  debug_tweaks: |
+    EXTRA_IMAGE_FEATURES ?= "debug-tweaks"

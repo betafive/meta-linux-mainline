@@ -32,7 +32,6 @@ local_conf_header:
   base: |
     PACKAGE_CLASSES ?= "package_rpm"
     SDKMACHINE ?= "x86_64"
-    EXTRA_IMAGE_FEATURES ?= "debug-tweaks"
     USER_CLASSES ?= "buildstats"
     PATCHRESOLVE = "noop"
     BB_DISKMON_DIRS ?= "\
@@ -52,3 +51,5 @@ local_conf_header:
     PACKAGECONFIG:remove:pn-qemu-system-native = "alsa epoxy virglrenderer"
   oldest_kernel: |
     require conf/linux-mainline/oldest-kernel.inc
+  debug_tweaks: |
+    EXTRA_IMAGE_FEATURES ?= "empty-root-password allow-empty-password allow-root-login"
