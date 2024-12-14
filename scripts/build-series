@@ -1,0 +1,168 @@
+#! /usr/bin/env python3
+# Copyright (C) 2024, meta-linux-mainline contributors
+# SPDX-License-Identifier: MIT
+
+import argparse
+import datetime
+import os
+import shlex
+import subprocess
+import sys
+import textwrap
+
+YOCTO_RELEASES = ["kirkstone", "scarthgap", "styhead", "master"]
+LINUX_RELEASES = ["4.19", "5.4", "5.10", "5.15", "6.1", "lts", "stable", "mainline"]
+MACHINES = [
+    "raspberrypi4-64",
+    "raspberrypi4",
+    "qemux86-64",
+    "qemuarm64",
+    "qemuriscv64",
+    "qemux86",
+    "qemuarm",
+    "qemuriscv32",
+]
+
+
+def pretty_timedelta(t):
+    seconds = t.seconds % 60
+    minutes = t.total_seconds() // 60
+    hours = int(minutes // 60)
+    minutes = int(minutes % 60)
+    return f"{hours:02d}h {minutes:02d}m {seconds:02d}s"
+
+
+def msg(s):
+    print(s, end="", flush=True)
+
+
+def iter_builds(args):
+    for yocto_release in args.yocto_releases:
+        for linux_release in args.linux_releases:
+            for machine in args.machines:
+                yield (yocto_release, linux_release, machine)
+
+
+def build_series(args):
+    count = len(args.yocto_releases) * len(args.linux_releases) * len(args.machines)
+    failed = 0
+
+    msg(f"Running {count} builds...\n")
+    for i, (yocto_release, linux_release, machine) in enumerate(iter_builds(args)):
+        build_dir = os.path.join(args.workdir, yocto_release, linux_release, machine)
+        log_file = os.path.join(build_dir, "build.log")
+        cmd = [
+            "./scripts/build",
+            "-w",
+            args.workdir,
+            "-y",
+            yocto_release,
+            "-l",
+            linux_release,
+            "-m",
+            machine,
+        ]
+        if args.siteconf:
+            cmd += ["-s", args.siteconf]
+        if i == 0 and args.update:
+            cmd += ["-U"]
+
+        msg(f"[{i+1:03d}/{count:03d}] ")
+        if args.dry_run:
+            msg(f"{build_dir} -- ")
+            msg(f"{shlex.join(cmd)}\n")
+            continue
+
+        msg(f"R={yocto_release} K={linux_release} M={machine}".ljust(64))
+
+        t_start = datetime.datetime.now()
+        if os.path.exists(build_dir):
+            subprocess.run(["rm", "-rf", build_dir])
+        os.makedirs(build_dir)
+        with open(log_file, "w") as f:
+            rc = subprocess.run(cmd, stdout=f, stderr=f)
+        if not args.no_clean:
+            build_subdir = os.path.join(build_dir, "build")
+            layers_subdir = os.path.join(build_dir, "layers")
+            subprocess.run(["rm", "-rf", build_subdir, layers_subdir])
+        t_stop = datetime.datetime.now()
+        t_build = t_stop - t_start
+        if rc.returncode == 0:
+            msg(f"  success in {pretty_timedelta(t_build)}\n")
+        else:
+            msg(f"  failure in {pretty_timedelta(t_build)} !!\n")
+            failed += 1
+
+    if failed:
+        msg("Failed!\n")
+        return 1
+
+    msg("All Succeeded.\n")
+    return 0
+
+
+def main():
+    epilog = textwrap.dedent(
+        f"""\
+        Defaults:
+            YOCTO_RELEASES: {', '.join(YOCTO_RELEASES)}
+            LINUX_RELEASES: {', '.join(LINUX_RELEASES)}
+            MACHINES: {', '.join(MACHINES)}
+        """
+    )
+    parser = argparse.ArgumentParser(
+        description="Run a series of meta-linux-mainline builds.",
+        epilog=epilog,
+        formatter_class=argparse.RawTextHelpFormatter,
+    )
+    parser.add_argument("-s", "--siteconf", help="Path to a local site.conf file")
+    parser.add_argument(
+        "-w", "--workdir", default=os.getcwd(), help="Path to build directory"
+    )
+    parser.add_argument(
+        "-y",
+        "--yocto-releases",
+        nargs="+",
+        default=YOCTO_RELEASES,
+        help="Yocto Project release series list",
+    )
+    parser.add_argument(
+        "-l",
+        "--linux-releases",
+        nargs="+",
+        default=LINUX_RELEASES,
+        help="Linux kernel release series list",
+    )
+    parser.add_argument(
+        "-m",
+        "--machines",
+        nargs="+",
+        default=MACHINES,
+        help="Yocto Project MACHINE list",
+    )
+    parser.add_argument(
+        "-D",
+        "--dry-run",
+        action="store_true",
+        help="Dry run, just print a list of the commands that would be run",
+    )
+    parser.add_argument(
+        "-U",
+        "--update",
+        action="store_true",
+        help="Update layers before the first build",
+    )
+    parser.add_argument(
+        "-N",
+        "--no-clean",
+        action="store_true",
+        help="Do not clean up after each build (may use lots of disk space)",
+    )
+    args = parser.parse_args()
+    args.workdir = os.path.realpath(args.workdir)
+
+    return build_series(args)
+
+
+returncode = main()
+sys.exit(returncode)

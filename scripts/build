@@ -1,0 +1,134 @@
+#! /usr/bin/env python3
+# Copyright (C) 2024, meta-linux-mainline contributors
+# SPDX-License-Identifier: MIT
+
+import argparse
+import os
+import subprocess
+import sys
+import textwrap
+
+SOURCEPATH = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+
+
+def write_kas_script(script_file, workdir, yocto_release):
+    with open(script_file, "w") as f:
+        f.write(
+            textwrap.dedent(
+                f"""\
+                #! /bin/bash
+
+                set -ue
+
+                export DL_DIR="{workdir}/downloads"
+                export SSTATE_DIR="{workdir}/sstate-cache"
+                export LAYERS_DIR="{workdir}/{yocto_release}/layers"
+                export KAS_CLONE_DEPTH=1
+
+                mkdir -p "$LAYERS_DIR"
+                ln -sfn "$LAYERS_DIR" layers
+                kas "$@"
+                """
+            )
+        )
+    os.chmod(script_file, 0o755)
+
+
+def write_config(build_dir, yocto_release, linux_release, machine, siteconf):
+    config_file = os.path.join(build_dir, ".config.yaml")
+    with open(config_file, "w") as f:
+        f.write(
+            textwrap.dedent(
+                f"""\
+                header:
+                  version: 14
+                  includes:
+                      - repo: yocto-common
+                        file: kas/base.yml
+                      - repo: yocto-common
+                        file: kas/release-{yocto_release}.yml
+                      - repo: meta-linux-mainline
+                        file: kas/kernel-{linux_release}.yml
+                      - repo: yocto-common
+                        file: kas/machine-{machine}.yml
+
+                repos:
+                  meta-linux-mainline:
+                    path: {SOURCEPATH}
+
+                  yocto-common:
+                    url: "https://github.com/betafive/yocto-common.git"
+                    path: layers/yocto-common
+                    branch: main
+                    layers:
+                      .: disabled
+                """
+            )
+        )
+
+        if siteconf:
+            f.write(
+                textwrap.dedent(
+                    f"""
+                    local_conf_header:
+                      siteconf:
+                        require {siteconf}
+                    """
+                )
+            )
+
+
+def build(args):
+    build_dir = os.path.join(
+        args.workdir, args.yocto_release, args.linux_release, args.machine
+    )
+    script_file = os.path.join(build_dir, "kas.sh")
+
+    os.makedirs(build_dir, exist_ok=True)
+    write_kas_script(script_file, args.workdir, args.yocto_release)
+    write_config(
+        build_dir, args.yocto_release, args.linux_release, args.machine, args.siteconf
+    )
+
+    if args.dry_run:
+        return 0
+
+    cmd = [script_file, "build"]
+    if args.update:
+        cmd += ["--update", "--force-checkout"]
+    rc = subprocess.run(cmd, cwd=build_dir)
+    return rc.returncode
+
+
+def main():
+    parser = argparse.ArgumentParser(description="Run one meta-linux-mainline build.")
+    parser.add_argument("-s", "--siteconf", help="Path to a local site.conf file")
+    parser.add_argument(
+        "-w", "--workdir", default=os.getcwd(), help="Path to build directory"
+    )
+    parser.add_argument(
+        "-y", "--yocto-release", default="master", help="Yocto Project release series"
+    )
+    parser.add_argument(
+        "-l", "--linux-release", default="mainline", help="Linux kernel release series"
+    )
+    parser.add_argument(
+        "-m", "--machine", default="qemuarm64", help="Yocto Project MACHINE"
+    )
+    parser.add_argument(
+        "-D",
+        "--dry-run",
+        action="store_true",
+        help="Dry run, populate build directory but don't actually build",
+    )
+    parser.add_argument(
+        "-U", "--update", action="store_true", help="Update layers before building"
+    )
+    args = parser.parse_args()
+    args.workdir = os.path.realpath(args.workdir)
+
+    return build(args)
+
+
+returncode = main()
+sys.exit(returncode)
