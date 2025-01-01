@@ -36,11 +36,32 @@ def msg(s):
     print(s, end="", flush=True)
 
 
+def version_lessthan(version, vmajor, vminor):
+    if version in ("lts", "stable", "mainline"):
+        return False
+    t = tuple([int(x) for x in version.split(".")])
+    return t < (vmajor, vminor)
+
+
+def is_valid_build(yocto_release, linux_release, machine):
+    if machine.startswith("raspberrypi"):
+        if version_lessthan(linux_release, 5, 10):
+            return False
+        if yocto_release == "styhead":
+            return False
+    elif machine.startswith("qemuriscv"):
+        if version_lessthan(linux_release, 5, 10):
+            return False
+
+    return True
+
+
 def iter_builds(args):
     for yocto_release in args.yocto_releases:
         for linux_release in args.linux_releases:
             for machine in args.machines:
-                yield (yocto_release, linux_release, machine)
+                if is_valid_build(yocto_release, linux_release, machine):
+                    yield (yocto_release, linux_release, machine)
 
 
 def build_series(args):
