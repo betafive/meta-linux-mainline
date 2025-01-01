@@ -47,10 +47,12 @@ def write_config(build_dir, yocto_release, linux_release, machine, siteconf):
                         file: kas/base.yml
                       - repo: yocto-common
                         file: kas/release-{yocto_release}.yml
-                      - repo: meta-linux-mainline
-                        file: kas/kernel-{linux_release}.yml
                       - repo: yocto-common
                         file: kas/machine-{machine}.yml
+                      - repo: meta-linux-mainline
+                        file: kas/common.yml
+                      - repo: meta-linux-mainline
+                        file: kas/kernel-{linux_release}.yml
 
                 repos:
                   meta-linux-mainline:
