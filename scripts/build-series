@@ -11,7 +11,7 @@ import sys
 import textwrap
 
 YOCTO_RELEASES = ["kirkstone", "scarthgap", "styhead", "master"]
-LINUX_RELEASES = ["4.19", "5.4", "5.10", "5.15", "6.1", "lts", "stable", "mainline"]
+LINUX_RELEASES = ["5.4", "5.10", "5.15", "6.1", "6.6", "stable", "mainline"]
 MACHINES = [
     "raspberrypi4-64",
     "raspberrypi4",
