@@ -65,11 +65,16 @@ def iter_builds(args):
 
 
 def build_series(args):
-    count = len(args.yocto_releases) * len(args.linux_releases) * len(args.machines)
     failed = 0
+    builds = []
+    for yocto_release in args.yocto_releases:
+        for linux_release in args.linux_releases:
+            for machine in args.machines:
+                if is_valid_build(yocto_release, linux_release, machine):
+                    builds.append((yocto_release, linux_release, machine))
 
-    msg(f"Running {count} builds...\n")
-    for i, (yocto_release, linux_release, machine) in enumerate(iter_builds(args)):
+    msg(f"Running {len(builds)} builds...\n")
+    for i, (yocto_release, linux_release, machine) in enumerate(builds):
         build_dir = os.path.join(args.workdir, yocto_release, linux_release, machine)
         log_file = os.path.join(build_dir, "build.log")
         cmd = [
@@ -88,7 +93,7 @@ def build_series(args):
         if i == 0 and args.update:
             cmd += ["-U"]
 
-        msg(f"[{i+1:03d}/{count:03d}] ")
+        msg(f"[{i+1:03d}/{len(builds):03d}] ")
         if args.dry_run:
             msg(f"{build_dir} -- ")
             msg(f"{shlex.join(cmd)}\n")
