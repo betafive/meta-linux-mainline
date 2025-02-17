@@ -15,11 +15,11 @@ repos:
     hooks:
     -   id: black
 -   repo: https://github.com/PyCQA/flake8
-    rev: 7.1.1
+    rev: 7.1.2
     hooks:
     -   id: flake8
 -   repo: https://github.com/jackdewinter/pymarkdown
-    rev: v0.9.27
+    rev: v0.9.28
     hooks:
     -   id: pymarkdown
 -   repo: https://github.com/frnmst/md-toc
