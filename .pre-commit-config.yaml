@@ -15,11 +15,11 @@ repos:
     hooks:
     -   id: black
 -   repo: https://github.com/PyCQA/flake8
-    rev: 7.1.1
+    rev: 7.2.0
     hooks:
     -   id: flake8
 -   repo: https://github.com/jackdewinter/pymarkdown
-    rev: v0.9.27
+    rev: v0.9.29
     hooks:
     -   id: pymarkdown
 -   repo: https://github.com/frnmst/md-toc
@@ -28,7 +28,7 @@ repos:
     -   id: md-toc
         args: ["github", "-u", "*"]
 -   repo: https://github.com/pycqa/isort
-    rev: 6.0.0
+    rev: 6.0.1
     hooks:
     -   id: isort
 
