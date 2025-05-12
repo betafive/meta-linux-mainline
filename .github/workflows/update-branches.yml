@@ -16,3 +16,4 @@ jobs:
       - run: git push --force origin HEAD:kirkstone
       - run: git push --force origin HEAD:scarthgap
       - run: git push --force origin HEAD:styhead
+      - run: git push --force origin HEAD:walnascar
