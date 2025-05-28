@@ -10,7 +10,7 @@ import subprocess
 import sys
 import textwrap
 
-YOCTO_RELEASES = ["kirkstone", "scarthgap", "styhead", "walnascar", "master"]
+YOCTO_RELEASES = ["kirkstone", "scarthgap", "walnascar", "master"]
 LINUX_RELEASES = ["5.4", "5.10", "5.15", "6.1", "6.6", "stable", "lts", "mainline"]
 MACHINES = [
     "raspberrypi4-64",
@@ -46,8 +46,6 @@ def version_lessthan(version, vmajor, vminor):
 def is_valid_build(yocto_release, linux_release, machine):
     if machine.startswith("raspberrypi"):
         if version_lessthan(linux_release, 5, 10):
-            return False
-        if yocto_release == "styhead":
             return False
     elif machine.startswith("qemuriscv"):
         if version_lessthan(linux_release, 5, 10):
