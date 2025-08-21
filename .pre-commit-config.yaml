@@ -3,7 +3,7 @@
 
 repos:
 -   repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v5.0.0
+    rev: v6.0.0
     hooks:
     -   id: check-merge-conflict
     -   id: check-symlinks
@@ -19,7 +19,7 @@ repos:
     hooks:
     -   id: flake8
 -   repo: https://github.com/jackdewinter/pymarkdown
-    rev: v0.9.30
+    rev: v0.9.32
     hooks:
     -   id: pymarkdown
 -   repo: https://github.com/frnmst/md-toc
