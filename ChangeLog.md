@@ -13,7 +13,75 @@ Regular updates to the linux-stable and linux-mainline recipes are not included
 in this document as that would lead to far too much noise. However, changes to
 the default LTS release series will be documented here.
 
+Changes only visible to developers of this layer (e.g. changes to layer update
+and autobuild scripts) will not be documented in this file.
+
 For a detailed list of all changes consult the git log.
+
+## 2025-05
+
+* Dropped support for Yocto Project 5.1 "styhead" branch.
+
+* Added support for Yocto Project 5.2 "walnascar" branch.
+
+## 2025-03
+
+* Added support for overriding `SRC_URI` in our kernel recipes via the new
+  `LINUX_STABLE_GIT_URI` and `LINUX_MAINLINE_GIT_URI` variables. Setting these
+  variables when local git mirrors are available ensures that there will be no
+  unnecessary load on kernel.org infrastructure.
+
+## 2025-01
+
+* Dropped now obsolete 4.19 kernel series and set `OLDEST_KERNEL` to 5.4.
+
+## 2024-12
+
+* Switch default LTS kernel series to 6.12.
+
+## 2024-11
+
+* Dropped support for nios2 and arc architectures in our kernel recipes as
+  they're neither used or tested.
+
+* Added sensible defaults for `KCONFIG_MODE` and `KBUILD_DEFCONFIG` in our
+  kernel recipes.
+
+* Added new `LINUX_MINIMUM_VMAJOR` and `LINUX_MINIMUM_VMINOR` variables so that
+  machine configurations can easily specify the minimum kernel version they
+  support when using our kernel recipes.
+
+* Added new `KERNEL_EXTRA_SRC_URI` variable which can be used to easily extend
+  the `SRC_URI` used by our kernel recipes.
+
+* Modified kernel config for qemuriscv32 to fix the build.
+
+## 2024-10
+
+* Switched back to using kernel-yocto bbclass in our kernel recipes so people
+  can use config fragments, defconfigs in `SRC_URI` and other nice kernel-yocto
+  features.
+
+* Added some basic contribution guidelines.
+
+## 2024-09
+
+* Dropped support for Yocto Project 4.3 "nanbield" branch.
+
+* Added support for Yocto Project 5.1 "styhead" branch.
+
+* Added `truncate` to `HOSTTOOLS` as recent mainline & stable kernels use this
+  as part of the build process.
+
+## 2024-08
+
+* Disabled buildpath QA check as several generated source files in the kernel
+  include the full path to the build directory.
+
+## 2024-07
+
+* Disabled patch-status QA check as we use patch files directly from kernel.org
+  which do not include the Upstream-Status line required by Yocto Project.
 
 ## 2024-05
 
