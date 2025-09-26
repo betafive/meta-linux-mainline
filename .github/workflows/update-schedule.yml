@@ -1,0 +1,32 @@
+# Copyright (C) 2025, meta-linux-mainline contributors
+# SPDX-License-Identifier: MIT
+
+name: Scheduled layer updates
+on:
+  schedule:
+    - cron: '0 9 * * *'
+
+jobs:
+  update-layer:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Update layer
+        run: |
+          git config user.name "github-actions[bot]" &&
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com" &&
+          git fetch --unshallow &&
+          ./scripts/update-layer
+          new_commits=$(git rev-list --count origin/main..HEAD)
+          if [[ $new_commits -gt 0 ]]; then
+            git push
+            # We need to duplicate the update-branches workflow here as pushing to a
+            # repository using the github-actions token does not trigger subsequent
+            # workflows (see https://github.com/orgs/community/discussions/25702).
+            git push --force origin HEAD:master
+            git push --force origin HEAD:kirkstone
+            git push --force origin HEAD:scarthgap
+            git push --force origin HEAD:styhead
+            git push --force origin HEAD:walnascar
+          fi
