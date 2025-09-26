@@ -57,7 +57,7 @@ def update_mainline_recipe(version):
             ["git", "add", "recipes-kernel/linux/linux-mainline.bb"], check=True
         )
         subprocess.run(
-            ["git", "commit", "-s", "-F", "-"], input=msg.encode("utf-8"), check=True
+            ["git", "commit", "-F", "-"], input=msg.encode("utf-8"), check=True
         )
 
 
@@ -106,7 +106,7 @@ def update_stable_recipe(version):
             check=True,
         )
         subprocess.run(
-            ["git", "commit", "-s", "-F", "-"], input=msg.encode("utf-8"), check=True
+            ["git", "commit", "-F", "-"], input=msg.encode("utf-8"), check=True
         )
 
 
