@@ -19,7 +19,7 @@ repos:
     hooks:
     -   id: flake8
 -   repo: https://github.com/jackdewinter/pymarkdown
-    rev: v0.9.32
+    rev: v0.9.33
     hooks:
     -   id: pymarkdown
 -   repo: https://github.com/frnmst/md-toc
