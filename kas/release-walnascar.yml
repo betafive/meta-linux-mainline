@@ -1,0 +1,9 @@
+# Copyright meta-linux-mainline contributors
+# SPDX-License-Identifier: MIT
+
+header:
+  version: 14
+
+defaults:
+  repos:
+    branch: walnascar
