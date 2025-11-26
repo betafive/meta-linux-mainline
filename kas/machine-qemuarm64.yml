@@ -4,6 +4,8 @@
 header:
   version: 14
 
+machine: qemuarm64
+
 local_conf_header:
   kernel-machine: |
     require conf/linux-mainline/bsp/qemuarm64.inc

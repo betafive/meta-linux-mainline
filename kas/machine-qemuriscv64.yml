@@ -4,6 +4,8 @@
 header:
   version: 14
 
+machine: qemuriscv64
+
 local_conf_header:
   kernel-machine: |
     require conf/linux-mainline/bsp/qemuriscv64.inc

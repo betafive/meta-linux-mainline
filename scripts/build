@@ -43,29 +43,18 @@ def write_config(build_dir, yocto_release, linux_release, machine, siteconf):
                 header:
                   version: 14
                   includes:
-                      - repo: yocto-common
-                        file: kas/base.yml
-                      - repo: yocto-common
-                        file: kas/release-{yocto_release}.yml
-                      - repo: yocto-common
-                        file: kas/machine-{machine}.yml
                       - repo: meta-linux-mainline
-                        file: kas/common.yml
+                        file: kas/base.yml
+                      - repo: meta-linux-mainline
+                        file: kas/release-{yocto_release}.yml
+                      - repo: meta-linux-mainline
+                        file: kas/machine-{machine}.yml
                       - repo: meta-linux-mainline
                         file: kas/kernel-{linux_release}.yml
-                      - repo: meta-linux-mainline
-                        file: kas/machine-{machine}.yml
 
                 repos:
                   meta-linux-mainline:
                     path: {SOURCEPATH}
-
-                  yocto-common:
-                    url: "https://github.com/betafive/yocto-common.git"
-                    path: layers/yocto-common
-                    branch: main
-                    layers:
-                      .: disabled
                 """
             )
         )

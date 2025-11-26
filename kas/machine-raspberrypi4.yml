@@ -4,6 +4,13 @@
 header:
   version: 14
 
+machine: raspberrypi4
+
+repos:
+  meta-raspberrypi:
+    url: https://github.com/agherzan/meta-raspberrypi.git
+    path: layers/meta-raspberrypi
+
 local_conf_header:
   kernel-machine: |
     require conf/linux-mainline/bsp/raspberrypi4.inc

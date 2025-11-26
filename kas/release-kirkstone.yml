@@ -4,8 +4,10 @@
 header:
   version: 14
 
-machine: qemuarm
+defaults:
+  repos:
+    branch: kirkstone
 
 local_conf_header:
-  kernel-machine: |
-    require conf/linux-mainline/bsp/qemuarm.inc
+  debug_tweaks: |
+    EXTRA_IMAGE_FEATURES ?= "debug-tweaks"

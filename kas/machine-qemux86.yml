@@ -4,6 +4,8 @@
 header:
   version: 14
 
+machine: qemux86
+
 local_conf_header:
   kernel-machine: |
     require conf/linux-mainline/bsp/qemux86.inc
