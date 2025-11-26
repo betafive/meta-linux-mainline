@@ -8,6 +8,10 @@ defaults:
   repos:
     branch: kirkstone
 
+repos:
+  bitbake:
+    branch: 2.0
+
 local_conf_header:
   debug_tweaks: |
     EXTRA_IMAGE_FEATURES ?= "debug-tweaks"
