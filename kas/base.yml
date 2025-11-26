@@ -9,11 +9,20 @@ target:
   - core-image-minimal
 
 repos:
-  poky:
-    url: https://git.yoctoproject.org/git/poky
-    path: layers/poky
+  openembedded-core:
+    url: https://git.openembedded.org/openembedded-core
+    path: layers/openembedded-core
     layers:
       meta:
+  bitbake:
+    url: https://git.openembedded.org/bitbake
+    path: layers/bitbake
+    layers:
+      bitbake: disabled
+  meta-yocto:
+    url: https://git.yoctoproject.org/meta-yocto
+    path: layers/meta-yocto
+    layers:
       meta-poky:
 
 bblayers_conf_header:
