@@ -10,17 +10,12 @@ import subprocess
 import sys
 import textwrap
 
-YOCTO_RELEASES = ["kirkstone", "scarthgap", "walnascar", "master"]
-LINUX_RELEASES = ["5.4", "5.10", "5.15", "6.1", "6.6", "lts", "stable", "mainline"]
+YOCTO_RELEASES = ["kirkstone", "scarthgap", "whinlatter", "master"]
+LINUX_RELEASES = ["5.10", "5.15", "6.1", "6.6", "6.12", "lts", "stable", "mainline"]
 MACHINES = [
-    "raspberrypi4-64",
-    "raspberrypi4",
     "qemux86-64",
     "qemuarm64",
     "qemuriscv64",
-    "qemux86",
-    "qemuarm",
-    "qemuriscv32",
 ]
 
 
@@ -36,30 +31,11 @@ def msg(s):
     print(s, end="", flush=True)
 
 
-def version_lessthan(version, vmajor, vminor):
-    if version in ("lts", "stable", "mainline"):
-        return False
-    t = tuple([int(x) for x in version.split(".")])
-    return t < (vmajor, vminor)
-
-
-def is_valid_build(yocto_release, linux_release, machine):
-    if machine.startswith("raspberrypi"):
-        if version_lessthan(linux_release, 5, 10):
-            return False
-    elif machine.startswith("qemuriscv"):
-        if version_lessthan(linux_release, 5, 10):
-            return False
-
-    return True
-
-
 def iter_builds(args):
     for yocto_release in args.yocto_releases:
         for linux_release in args.linux_releases:
             for machine in args.machines:
-                if is_valid_build(yocto_release, linux_release, machine):
-                    yield (yocto_release, linux_release, machine)
+                yield (yocto_release, linux_release, machine)
 
 
 def build_series(args):
@@ -68,8 +44,7 @@ def build_series(args):
     for yocto_release in args.yocto_releases:
         for linux_release in args.linux_releases:
             for machine in args.machines:
-                if is_valid_build(yocto_release, linux_release, machine):
-                    builds.append((yocto_release, linux_release, machine))
+                builds.append((yocto_release, linux_release, machine))
 
     msg(f"Running {len(builds)} builds...\n")
     for i, (yocto_release, linux_release, machine) in enumerate(builds):
