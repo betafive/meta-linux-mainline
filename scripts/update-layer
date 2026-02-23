@@ -40,17 +40,13 @@ def update_mainline_recipe(version):
         srcrev = get_srcrev(version, "torvalds")
 
         # Write the new recipe
-        open("recipes-kernel/linux/linux-mainline.bb", "w").write(
-            textwrap.dedent(
-                f"""\
+        open("recipes-kernel/linux/linux-mainline.bb", "w").write(textwrap.dedent(f"""\
                 # Copyright meta-linux-mainline contributors (auto-generated file)
                 # SPDX-License-Identifier: CC0-1.0
                 LINUX_VERSION = "{version}"
                 SRCREV = "{srcrev}"
                 require linux-mainline.inc
-                """
-            )
-        )
+                """))
 
         msg = f"linux-mainline: Uprev to {version}"
         subprocess.run(
@@ -83,9 +79,7 @@ def update_stable_recipe(version):
         srcrev = get_srcrev(version, "stable")
 
         # Write the new recipe
-        open(fname, "w").write(
-            textwrap.dedent(
-                f"""\
+        open(fname, "w").write(textwrap.dedent(f"""\
                 # Copyright meta-linux-mainline contributors (auto-generated file)
                 # SPDX-License-Identifier: CC0-1.0
                 LINUX_VMAJOR = "{vmajor}"
@@ -93,9 +87,7 @@ def update_stable_recipe(version):
                 LINUX_VPATCH = "{vpatch}"
                 SRCREV = "{srcrev}"
                 require linux-stable.inc
-                """
-            )
-        )
+                """))
 
         if old_vpatch:
             msg = f"linux-stable: Uprev {vmajor}.{vminor} recipe to v{vmajor}.{vminor}.{vpatch}"

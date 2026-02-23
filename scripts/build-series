@@ -126,14 +126,12 @@ def build_series(args):
 
 
 def main():
-    epilog = textwrap.dedent(
-        f"""\
+    epilog = textwrap.dedent(f"""\
         Defaults:
             YOCTO_RELEASES: {', '.join(YOCTO_RELEASES)}
             LINUX_RELEASES: {', '.join(LINUX_RELEASES)}
             MACHINES: {', '.join(MACHINES)}
-        """
-    )
+        """)
     parser = argparse.ArgumentParser(
         description="Run a series of meta-linux-mainline builds.",
         epilog=epilog,
