@@ -13,9 +13,7 @@ SOURCEPATH = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 
 def write_kas_script(script_file, workdir, yocto_release):
     with open(script_file, "w") as f:
-        f.write(
-            textwrap.dedent(
-                f"""\
+        f.write(textwrap.dedent(f"""\
                 #! /bin/bash
 
                 set -ue
@@ -28,18 +26,14 @@ def write_kas_script(script_file, workdir, yocto_release):
                 mkdir -p "$LAYERS_DIR"
                 ln -sfn "$LAYERS_DIR" layers
                 kas "$@"
-                """
-            )
-        )
+                """))
     os.chmod(script_file, 0o755)
 
 
 def write_config(build_dir, yocto_release, linux_release, machine, siteconf):
     config_file = os.path.join(build_dir, ".config.yaml")
     with open(config_file, "w") as f:
-        f.write(
-            textwrap.dedent(
-                f"""\
+        f.write(textwrap.dedent(f"""\
                 header:
                   version: 14
                   includes:
@@ -66,20 +60,14 @@ def write_config(build_dir, yocto_release, linux_release, machine, siteconf):
                     branch: main
                     layers:
                       .: disabled
-                """
-            )
-        )
+                """))
 
         if siteconf:
-            f.write(
-                textwrap.dedent(
-                    f"""
+            f.write(textwrap.dedent(f"""
                     local_conf_header:
                       siteconf:
                         require {siteconf}
-                    """
-                )
-            )
+                    """))
 
 
 def build(args):
