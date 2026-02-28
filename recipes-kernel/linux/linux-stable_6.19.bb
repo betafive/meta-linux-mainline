@@ -2,6 +2,6 @@
 # SPDX-License-Identifier: CC0-1.0
 LINUX_VMAJOR = "6"
 LINUX_VMINOR = "19"
-LINUX_VPATCH = "4"
-SRCREV = "a30b36143a41aa91d0c942e7a08d1c0c861e3102"
+LINUX_VPATCH = "5"
+SRCREV = "c89ce241c1909d2c2bdde88334c33f3000d364fb"
 require linux-stable.inc
