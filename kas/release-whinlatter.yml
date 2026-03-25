@@ -10,4 +10,4 @@ defaults:
 
 repos:
   bitbake:
-    branch: 2.16
+    branch: '2.16'
