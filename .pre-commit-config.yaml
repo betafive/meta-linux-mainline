@@ -22,7 +22,7 @@ repos:
     hooks:
     -   id: flake8
 -   repo: https://github.com/jackdewinter/pymarkdown
-    rev: v0.9.36
+    rev: v0.9.37
     hooks:
     -   id: pymarkdown
 -   repo: https://github.com/frnmst/md-toc
@@ -31,7 +31,7 @@ repos:
     -   id: md-toc
         args: ["github", "-u", "*"]
 -   repo: https://github.com/pycqa/isort
-    rev: 8.0.1
+    rev: 9.0.0a3
     hooks:
     -   id: isort
 
