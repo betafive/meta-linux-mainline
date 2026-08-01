@@ -18,6 +18,30 @@ and autobuild scripts) will not be documented in this file.
 
 For a detailed list of all changes consult the git log.
 
+## 2026-03
+
+* Dropped support for Yocto Project 5.2 "walnascar" release.
+
+## 2026-02
+
+* Added support for Yocto Project 5.3 "whinlatter" release.
+
+* Switch default LTS kernel series to 6.18.
+
+* Dropped now obsolete 5.4 kernel series and set `OLDEST_KERNEL` to 5.10.
+  Handling for kernel versions older than 5.10 has also been removed from the
+  kernel recipes and from the example BSP configuration files.
+
+## 2025-11
+
+* The example kas build configurations no longer depend on the external
+  yocto-common repository and have been updated to handle the deprecation of
+  the combined poky repository.
+
+## 2025-09
+
+* Setup automatic layer updates.
+
 ## 2025-05
 
 * Dropped support for Yocto Project 5.1 "styhead" branch.
