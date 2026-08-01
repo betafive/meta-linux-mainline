@@ -13,7 +13,4 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - run: git push --force origin HEAD:master
-      - run: git push --force origin HEAD:kirkstone
       - run: git push --force origin HEAD:scarthgap
-      - run: git push --force origin HEAD:styhead
-      - run: git push --force origin HEAD:walnascar
