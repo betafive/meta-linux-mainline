@@ -25,5 +25,6 @@ jobs:
             # repository using the github-actions token does not trigger subsequent
             # workflows (see https://github.com/orgs/community/discussions/25702).
             git push --force origin HEAD:master
+            git push --force origin HEAD:wrynose
             git push --force origin HEAD:scarthgap
           fi
