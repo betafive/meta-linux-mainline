@@ -10,13 +10,14 @@ jobs:
   update-layer:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
 
       - name: Update layer
         run: |
-          git config user.name "github-actions[bot]" &&
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com" &&
-          git fetch --unshallow &&
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           ./scripts/update-layer
           new_commits=$(git rev-list --count origin/main..HEAD)
           if [[ $new_commits -gt 0 ]]; then
