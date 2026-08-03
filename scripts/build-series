@@ -10,7 +10,7 @@ import subprocess
 import sys
 import textwrap
 
-YOCTO_RELEASES = ["scarthgap", "master"]
+YOCTO_RELEASES = ["scarthgap", "wrynose", "master"]
 LINUX_RELEASES = ["5.10", "5.15", "6.1", "6.6", "6.12", "lts", "stable", "mainline"]
 MACHINES = [
     "qemux86-64",
