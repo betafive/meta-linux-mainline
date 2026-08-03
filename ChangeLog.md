@@ -18,6 +18,14 @@ and autobuild scripts) will not be documented in this file.
 
 For a detailed list of all changes consult the git log.
 
+## 2026-08
+
+* Added support for Yocto Project 6.0 "wrynose".
+
+* Dropped support for Yocto Project 4.0 "kirkstone" and 5.3 "whinlatter"
+  releases. Also cleaned up a couple of references to "styhead" and
+  "walnascar".
+
 ## 2026-03
 
 * Dropped support for Yocto Project 5.2 "walnascar" release.
