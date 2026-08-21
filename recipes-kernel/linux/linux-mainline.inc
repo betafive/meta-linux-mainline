@@ -8,7 +8,6 @@ PV = "${LINUX_VERSION}"
 
 LINUX_MAINLINE_GIT_URI ?= "git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git;protocol=https"
 SRC_URI = "${LINUX_MAINLINE_GIT_URI};branch=master"
-S = "${WORKDIR}/git"
 
 DEPENDS += "libyaml-native python3-dtschema-wrapper-native"
 inherit pkgconfig
