@@ -18,6 +18,10 @@ and autobuild scripts) will not be documented in this file.
 
 For a detailed list of all changes consult the git log.
 
+## 2026-09
+
+* Added support for Yocto Project 6.1 "blacksail".
+
 ## 2026-08
 
 * Added support for Yocto Project 6.0 "wrynose".
