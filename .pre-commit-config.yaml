@@ -14,7 +14,7 @@ repos:
     -   id: mixed-line-ending
     -   id: trailing-whitespace
 -   repo: https://github.com/psf/black-pre-commit-mirror
-    rev: 26.5.1
+    rev: 26.10.0
     hooks:
     -   id: black
 -   repo: https://github.com/PyCQA/flake8
@@ -26,12 +26,12 @@ repos:
     hooks:
     -   id: pymarkdown
 -   repo: https://github.com/frnmst/md-toc
-    rev: 9.0.1
+    rev: 9.1.0
     hooks:
     -   id: md-toc
         args: ["github", "-u", "*"]
 -   repo: https://github.com/pycqa/isort
-    rev: 9.0.1
+    rev: 9.0.2
     hooks:
     -   id: isort
 
