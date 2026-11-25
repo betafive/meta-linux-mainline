@@ -32,8 +32,9 @@ kernel releases from kernel.org.
   kernel.org. These recipes are regularly updated to make it easy to follow
   mainline releases, the latest stable series or a chosen LTS release series.
 
-* We aim to be compatible with all currently supported Yocto Project releases as
-  well as the upstream master branch.
+* We aim to be compatible with the upstream Yocto Project master branch (currently
+  the "garburn" release series). Releases prior to "garburn" use an incompatible
+  layer format and are not supported.
 
 * We provide examples of how to use this layer in the form of BSP configurations
   for various targets.

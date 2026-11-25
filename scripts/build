@@ -85,7 +85,10 @@ def main():
     parser = argparse.ArgumentParser(description="Run one meta-linux-mainline build.")
     parser.add_argument("-s", "--siteconf", help="Path to a local site.conf file")
     parser.add_argument(
-        "-w", "--workdir", default=os.getcwd(), help="Path to build directory"
+        "-w",
+        "--workdir",
+        default=os.getcwd(),
+        help="Path to build directory (must be outside this layer)",
     )
     parser.add_argument(
         "-y", "--yocto-release", default="master", help="Yocto Project release series"
@@ -107,6 +110,10 @@ def main():
     )
     args = parser.parse_args()
     args.workdir = os.path.realpath(args.workdir)
+
+    # Other layers are placed under workdir and bitbake rejects nested layers
+    if os.path.commonpath([SOURCEPATH, args.workdir]) == SOURCEPATH:
+        parser.error("workdir must be outside the meta-linux-mainline directory")
 
     return build(args)
 

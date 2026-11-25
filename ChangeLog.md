@@ -18,6 +18,14 @@ and autobuild scripts) will not be documented in this file.
 
 For a detailed list of all changes consult the git log.
 
+## 2026-11
+
+* Converted to the new layer format and added support for the Yocto Project
+  "garburn" release series. This is incompatible with earlier releases.
+
+* Dropped support for Yocto Project 5.0 "scarthgap", 6.0 "wrynose" and 6.1
+  "blacksail" releases.
+
 ## 2026-09
 
 * Added support for Yocto Project 6.1 "blacksail".
